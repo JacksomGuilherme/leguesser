@@ -112,8 +112,8 @@ const checkGuess = () => {
   }
 
   if (guess === letreco) {
-    document.getElementById("btnRefresh").classList.remove("button-refresh-hidden")
-    document.getElementById("btnRefresh").classList.add("button-refresh")
+    // document.getElementById("btnRefresh").classList.remove("button-refresh-hidden")
+    // document.getElementById("btnRefresh").classList.add("button-refresh")
     moveToHiddenRow()
     return
   } else {
@@ -125,8 +125,8 @@ const checkGuess = () => {
         lastRowColumn.classList.remove("right")
         lastRowColumn.classList.add("wrong-result")
       }
-      document.getElementById("btnRefresh").classList.remove("button-refresh-hidden")
-      document.getElementById("btnRefresh").classList.add("button-refresh")
+      // document.getElementById("btnRefresh").classList.remove("button-refresh-hidden")
+      // document.getElementById("btnRefresh").classList.add("button-refresh")
       moveToHiddenRow()
     } else {
       moveToNextRow()
@@ -231,9 +231,9 @@ keyboardThirdRow.append(enterButton)
 
 document.onkeydown = function (evt) {
   evt = evt || window.evt
-  if (evt.key == "F5") {
-    evt.preventDefault()
-  }
+  // if (evt.key == "F5") {
+  //   evt.preventDefault()
+  // }
   if (evt.key === "Enter") {
     checkGuess()
   } else if (evt.key === "Backspace") {
