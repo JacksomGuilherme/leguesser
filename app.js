@@ -2,9 +2,8 @@ const tiles = document.querySelector(".tile-container")
 const keyboardFirstRow = document.querySelector("#keyboardFirstRow")
 const keyboardSecondRow = document.querySelector("#keyboardSecondRow")
 const keyboardThirdRow = document.querySelector("#keyboardThirdRow")
-const btnRefresh = document.querySelector("#buttonRefreshId")
 
-let palavrasArray = [
+let wordsArray = [
   "abade", "abafa", "abafe", "abafo", "abala", "abale", "abalo", "abana", "abane", "abano", "abata", "abate", "abati", "abato", "abeto", "ablua", "ablui", "abluo", "abole", "aboli", "abono", "abram", "abras", "abrem", "abres", "abria", "abril", "abrir", "abris", "abriu", "abusa", "abuse", "abuso", "acaba", "acabe", "acabo", "acaso", "acata", "acate", "acato", "acena", "acene", "aceno", "acesa", "aceso", "aceto", "achai", "acham", "achar", "achas", "achei", "achem", "aches", "achou", "acima", "ações", "acolá", "acuai", "acuam", "acuar", "acuas", "açude", "acudi", "acudo", "acuei", "acuem", "acues", "acuou", "acusa", "acuse", "acuso", "adaga", "adega", "adere", "aderi", "adeus", "adiai", "adiam", "adiar", "adias", "adida", "adido", "adiei", "adiem", "adies", "adimo", "adiou", "adira", "adiro", "adita", "adite", "adito", "adoce", "adora", "adore", "adoro", "adota", "adote", "adoto", "aduba", "adube", "adubo", "adula", "adule", "adulo", "advém", "advim", "advir", "afaga", "afago", "afana", "afane", "afano", "afere", "aferi", "afeta", "afete", "afeto", "afiai", "afiam", "afiar", "afias", "afiei", "afiem", "afies", "afina", "afine", "afino", "afins", "afiou", "afira", "afiro", "afixa", "afixe", "afixo", "aflua", "aflui", "afluo", "afoba", "afobe", "afobo", "afofa", "afofe", "afofo", "afoga", "afogo", "afora", "afore", "aforo", "afros", "aftas", "ágape", "agiam", "agias", "agido", "agimo", "agira", "agita", "agite", "agito", "agora", "aguar", "aguce", "aguda", "agudo", "aguou", "ainda", "ajais", "ajamo", "ajuda", "ajude", "ajudo", "alada", "alado", "alaga", "alago", "álamo", "álbum", "alçar", "alcei", "alcem", "alces", "alega", "alego", "alelo", "algas", "algoz", "algum", "alhos", "aliai", "aliam", "aliar", "aliás", "álibi", "aliei", "aliem", "alies", "alija", "alije", "alijo", "aliou", "alisa", "alise", "aliso", "almas", "aloca", "aloco", "aloja", "aloje", "alojo", "altar", "altas", "altos", "aluda", "alude", "aludi", "aludo", "aluga", "alugo", "aluna", "aluno", "alvas", "alvor", "alvos", "amada", "amado", "âmago", "amais", "amamo", "amara", "amaro", "amava", "âmbar", "ambas", "ambos", "ameba", "ameia", "ameis", "amemo", "amena", "ameno", "amido", "amiga", "amigo", "amima", "amime", "amimo", "amola", "amole", "amolo", "amora", "ampla",
   "amplo", "anais", "ancas", "anciã", "andai", "andam", "andar", "andas", "andei", "andem", "andes", "andor", "andou", "anela", "anele", "anelo", "anexa", "anexe", "anexo", "anglo", "angra", "anima", "anime", "ânimo", "anjos", "anota", "anote", "anoto", "ânsia", "antas", "antes", "antro", "anual", "anuam", "anuas", "anuem", "anuir", "anuis", "anuiu", "anula", "anule", "anulo", "anzol", "aonde", "aorta", "apaga", "apago", "apara", "apare", "aparo", "apeai", "apear", "apeei", "apega", "apego", "apeia", "apeie", "apeio", "apela", "apele", "apelo", "apena", "apene", "apeno", "apeou", "ápice", "apita", "apite", "apito", "apoio", "apolo", "apraz", "aptas", "aptos", "apura", "apure", "apuro", "aquém", "arada", "arado", "arais", "arame", "aramo", "arara", "arava", "arcai", "arcam", "arcar", "arcas", "arcos", "arcou", "ardam", "ardas", "ardei", "ardem", "arder", "ardes", "ardeu", "ardia", "ardil", "ardis", "ardor", "árdua", "árduo", "areal", "areia", "areis", "areja", "areje", "arejo", "aremo", "arena", "arfai", "arfam", "arfar", "arfas", "arfei", "arfem", "arfes", "arfou", "argua", "arguo", "árido", "armai", "armam", "armar", "armas", "armei", "armem", "armes", "armou", "aroma", "arpoa", "arpoe", "arque", "arria", "arrie", "arrio", "arroz", "artes", "artur", "asila", "asile", "asilo", "asnos", "aspas", "assai", "assam", "assar", "assas", "assaz", "assei", "assem", "asses", "assim", "assoa", "assoe", "assou", "astro", "ataca", "ataco", "atada", "atado", "atais", "atamo", "atara", "atava", "ateai", "atear", "ateei", "ateia", "ateie", "ateio", "ateis", "atemo", "ateou", "ateus", "ateve", "atice", "atida", "atido", "átimo", "atina", "atine", "atino", "atira", "atire", "atiro", "ativa", "ative", "ativo", "atlas", "atola", "atole", "atolo", "átomo", "atrai", "atrás", "átrio", "atriz", "atroz", "atuai", "atual", "atuam", "atuar", "atuas", "atuei", "atuem", "atues", "atuns", "atuou", "atura", "ature", "aturo", "audaz", "áudio", "aulas", "auras", "áurea", "áureo", "autor", "autos", "autua", "autue", "autuo", "avais", "avara", "avaro", "aveia", "aveio", "aviai", "aviam", "avião", "aviar", "avias", "ávida", "ávido", "aviei", "aviem", "avier", "avies", "avimo", "aviou", "avisa", "avise", "aviso", "aviva", "avive", "avivo", "axial", "axila",
   "azara", "azare", "azaro", "azeda", "azede", "azedo", "azeri", "azias", "azoto", "azuis", "azula", "azule", "azulo",
@@ -35,7 +34,7 @@ let palavrasArray = [
   "tabas", "tacai", "tacam", "tacar", "tacha", "tache", "tacho", "tacos", "tacou", "taipa", "talas", "talco", "talha", "talhe", "talho", "talos", "tampa", "tampe", "tampo", "tanga", "tange", "tangi", "tango", "tanja", "tanjo", "tanta", "tanto", "tapai", "tapam", "tapar", "tapas", "tapei", "tapem", "tapes", "tapou", "taque", "taras", "tarda", "tarde", "tardo", "tarja", "tatua", "tatue", "tatuo", "tatus", "taxai", "taxam", "taxar", "taxas", "taxei", "taxem", "taxes", "taxou", "tchau", "tecei", "tecem", "tecer", "teces", "teceu", "tecia", "tecla", "tecle", "teclo", "tédio", "teias", "teima", "teime", "teimo", "telas", "teles", "telha", "temam", "temas", "temei", "temem", "temer", "temes", "temeu", "temia", "temor", "temos", "tempo", "tenaz", "tenda", "tende", "tendi", "tendo", "tenha", "tenho", "tenor", "tenra", "tenro", "tensa", "tenso", "tenta", "tente", "tento", "tênue", "terei", "terem", "teres", "teria", "termo", "terna", "terno", "terra", "tesas", "teses", "tesos", "testa", "teste", "testo", "tetas", "tetos", "tetra", "texto", "tiara", "tição", "tidas", "tidos", "tigre", "times", "tinam", "tinas", "tinem", "tines", "tingi", "tinha", "tinia", "tinir", "tinis", "tiniu", "tinja", "tinjo", "tinta", "tinto", "tipos", "tirai", "tiram", "tirar", "tiras", "tirei", "tirem", "tires", "tiros", "tirou", "titia", "titio", "tiver", "toada", "tocai", "tocam", "tocar", "tocas", "tocha", "tocou", "todas", "todos", "togas", "tolas", "toldo", "tolha", "tolhe", "tolhi", "tolho", "tolos", "tomai", "tomam", "tomar", "tomba", "tombe", "tombo", "tomei", "tomem", "tomes", "tomou", "tonel", "tonta", "tonto", "topai", "topam", "topar", "topas", "topei", "topem", "topes", "topos", "topou", "toque", "toras", "torce", "torci", "torço", "torna", "torne", "torno", "toros", "torpe", "torra", "torre", "torro", "torso", "torta", "torto", "tosai", "tosam", "tosar", "tosas", "tosca", "tosco", "tosei", "tosem", "toses", "tosou", "tosse", "tossi", "tosta", "toste", "tosto", "total", "totem", "touca", "touro", "trace", "traço", "traem", "traga", "trago", "traia", "traio", "trair", "trais", "traiu", "traja", "traje", "trajo", "trama", "trapo", "trata", "trate", "trato", "trava", "trave", "travo", "traze", "treco", "trema", "treme", "tremi", "tremo", "trena", "trens",
   "trepa", "trepe", "trepo", "treta", "treva", "trevo", "treze", "tribo", "trigo", "trina", "trino", "trios", "tripa", "troca", "troça", "troce", "troco", "troço", "trono", "tropa", "trota", "trote", "troto", "trova", "truco", "trufa", "trupe", "truta", "tubos", "tufos", "tumba", "tumor", "tupis", "turba", "turbe", "turbo", "turca", "turco", "turma", "turmo", "turno", "turva", "turve", "turvo", "tutor",
   "úbere", "ufana", "ufane", "ufano", "uivai", "uivam", "uivar", "uivas", "uivei", "uivem", "uives", "uivos", "uivou", "ultra", "ulula", "ulule", "ululo", "úmido", "unais", "unamo", "ungem", "unges", "ungia", "ungir", "ungis", "ungiu", "unhas", "uniam", "união", "unias", "única", "único", "unida", "unido", "unimo", "unira", "untai", "untam", "untar", "untas", "untei", "untem", "untes", "untou", "urdam", "urdas", "urdem", "urdes", "urdia", "urdir", "urdis", "urdiu", "urgia", "urgir", "urgis", "urgiu", "urina", "urine", "urino", "urjam", "urjas", "urnas", "urrai", "urram", "urrar", "urras", "urrei", "urrem", "urres", "urros", "urrou", "ursas", "ursos", "urubu", "usada", "usado", "usais", "usamo", "usara", "usava", "useis", "usemo", "usina", "usual", "usura", "úteis",
-  "vacas", "vácuo", "vades", "vadia", "vadie", "vadio", "vagai", "vagam", "vagar", "vagas", "vagem", "vagia", "vagir", "vagis", "vagiu", "vagos", "vagou", "vague", "vaiai", "vaiam", "vaiar", "vaias", "vaiei", "vaiem", "vaies", "vaiou", "valas", "valei", "valem", "valer", "vales", "valeu", "valha", "valho", "valia", "valor", "valos", "valsa", "vamos", "vapor", "varai", "varam", "varar", "varas", "varei", "varem", "vares", "varia", "varie", "vario", "vário", "variz", "varou", "varra", "varre", "varri", "varro", "vasos", "vasta", "vasto", "vazai", "vazam", "vazão", "vazar", "vazas", "vazei", "vazem", "vazes", "vazia", "vazio", "vazou", "veado", "vedai", "vedam", "vedar", "vedas", "vedei", "vedem", "vedes", "vedou", "veias", "veira", "vejam", "vejas", "velai", "velam", "velar", "velas", "velei", "velem", "veles", "velha", "velho", "velou", "veloz", "vemos", "venal", "vence", "venci", "venda", "vende", "vendi", "vendo", "venha", "venho", "vênia", "venta", "vente", "vento", "verão", "verba", "verbo", "verde", "verei", "verem", "veres", "verga", "veria", "verme", "versa", "verse", "verso", "verta", "verte", "verti", "verto", "verve", "vesga", "vesgo", "vespa", "veste", "vesti", "vetai", "vetam", "vetar", "vetas", "vetei", "vetem", "vetes", "vetor", "vetou", "vexai", "vexam", "vexar", "vexas", "vexei", "vexem", "vexes", "vexou", "vezes", "viaja", "viaje", "viajo", "vibra", "vibre", "vibro", "vicia", "vicie", "vício", "vidas", "vídeo", "vidra", "vidre", "vidro", "viela", "viera", "vigas", "viger", "vigia", "vigie", "vigio", "vigor", "vilão", "vilas", "vimos", "vinca", "vinco", "vinda", "vinde", "vindo", "vinga", "vingo", "vinha", "vinho", "vinte", "viola", "viole", "violo", "virai", "viral", "viram", "virão", "virar", "viras", "virei", "virem", "vires", "viria", "viril", "viris", "virmo", "virou", "vírus", "visai", "visam", "visão", "visar", "visas", "visei", "visem", "vises", "visou", "visse", "vista", "viste", "visto", "vital", "vivam", "vivas", "vivaz", "vivei", "vivem", "viver", "vives", "viveu", "vivia", "vivos", "voada", "voado", "voais", "voamo", "voara", "voava", "vocal", "vodca", "voeis", "voemo", "vogal", "volta", "volte", "volto", "volva", "volve", "volvi", "volvo", "voraz", "vossa", "vosso", "votai", "votam", "votar", "votas",
+  "vacas", "vácuo", "vades", "vadia", "vadie", "vadio", "vagai", "vagam", "vagar", "vagas", "vagem", "vagia", "vagir", "vagis", "vagiu", "vagos", "vagou", "vague", "vaiai", "vaiam", "vaiar", "vaias", "vaiei", "vaiem", "vaies", "vaiou", "valas", "valei", "valem", "valer", "vales", "valeu", "valha", "valho", "valia", "valor", "valos", "valsa", "vamos", "vapor", "varai", "varam", "varar", "varas", "varei", "varem", "vares", "varia", "varie", "vario", "vário", "variz", "varou", "varra", "varre", "varri", "varro", "vasco", "vasos", "vasta", "vasto", "vazai", "vazam", "vazão", "vazar", "vazas", "vazei", "vazem", "vazes", "vazia", "vazio", "vazou", "veado", "vedai", "vedam", "vedar", "vedas", "vedei", "vedem", "vedes", "vedou", "veias", "veira", "vejam", "vejas", "velai", "velam", "velar", "velas", "velei", "velem", "veles", "velha", "velho", "velou", "veloz", "vemos", "venal", "vence", "venci", "venda", "vende", "vendi", "vendo", "venha", "venho", "vênia", "venta", "vente", "vento", "verão", "verba", "verbo", "verde", "verei", "verem", "veres", "verga", "veria", "verme", "versa", "verse", "verso", "verta", "verte", "verti", "verto", "verve", "vesga", "vesgo", "vespa", "veste", "vesti", "vetai", "vetam", "vetar", "vetas", "vetei", "vetem", "vetes", "vetor", "vetou", "vexai", "vexam", "vexar", "vexas", "vexei", "vexem", "vexes", "vexou", "vezes", "viaja", "viaje", "viajo", "vibra", "vibre", "vibro", "vicia", "vicie", "vício", "vidas", "vídeo", "vidra", "vidre", "vidro", "viela", "viera", "vigas", "viger", "vigia", "vigie", "vigio", "vigor", "vilão", "vilas", "vimos", "vinca", "vinco", "vinda", "vinde", "vindo", "vinga", "vingo", "vinha", "vinho", "vinte", "viola", "viole", "violo", "virai", "viral", "viram", "virão", "virar", "viras", "virei", "virem", "vires", "viria", "viril", "viris", "virmo", "virou", "vírus", "visai", "visam", "visão", "visar", "visas", "visei", "visem", "vises", "visou", "visse", "vista", "viste", "visto", "vital", "vivam", "vivas", "vivaz", "vivei", "vivem", "viver", "vives", "viveu", "vivia", "vivos", "voada", "voado", "voais", "voamo", "voara", "voava", "vocal", "vodca", "voeis", "voemo", "vogal", "volta", "volte", "volto", "volva", "volve", "volvi", "volvo", "voraz", "vossa", "vosso", "votai", "votam", "votar", "votas",
   "votei", "votem", "votes", "votos", "votou", "vozes", "vulgo", "vulto", "vulva",
   "xales", "xelim", "xeque", "xiita", "xinga", "xingo", "xisto", "xucra", "xucro",
   "zagas", "zanga", "zango", "zanza", "zanze", "zanzo", "zarpa", "zarpe", "zarpo", "zebra", "zelai", "zelam", "zelar", "zelas", "zelei", "zelem", "zeles", "zelou", "zerai", "zeram", "zerar", "zeras", "zerei", "zerem", "zeres", "zeros", "zerou", "zinco", "zomba", "zombe", "zombo", "zonas", "zonza", "zonzo", "zumba", "zumbe", "zumbi", "zumbo", "zunam", "zunas", "zunem", "zunes", "zunia", "zunir", "zunis", "zuniu", "zurra", "zurre", "zurro",
@@ -45,11 +44,13 @@ let palavrasArray = [
 const keysFirstRow = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
 const keysSecondRow = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
 const keysThirdRow = ["Z", "X", "C", "V", "B", "N", "M"]
+const acentosArray = ["Á", "À", "Â", "Ã", "É", "È", "Ê", "Í", "Ì", "Î", "Ó", "Ò", "Ô", "Õ", "Ú", "Ù", "Û", "Ç"]
 
 const rows = 7
 const columns = 5
 let currentRow = 0
 let currentColumn = 0
+let userSelectedColumn = false
 let letreco = sorteiaPalavra()
 let letrecoMap = {}
 for (let index = 0; index < letreco.length; index++) {
@@ -78,15 +79,24 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
       rowIndex === 0 ? "tile-column typing" : "tile-column"
     )
 
-    tileColumn.addEventListener("click", setSelected(this.frameElement))
+    tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
     tileRow.append(tileColumn)
     guesses[rowIndex][columnIndex] = ""
   }
   tiles.append(tileRow)
 }
 
-function setSelected(frameElement) {
-  // console.log(frameElement)
+function setSelected(element) {
+  let clickedLine = element.split("w")[1].split("c")[0]
+  let clickedColumn = element.split("n")[1]
+  if (currentRow == clickedLine) {
+    for (i = 0; i < 5; i++) {
+      document.getElementById(`row${currentRow}column${i}`).classList.remove("typing-selected")
+    }
+    document.getElementById(element).classList.add("typing-selected")
+    currentColumn = parseInt(clickedColumn, 8)
+    userSelectedColumn = true
+  }
 }
 const checkGuess = () => {
   const guess = guesses[currentRow].join("")
@@ -97,13 +107,21 @@ const checkGuess = () => {
   }
 
   var currentColumns = document.querySelectorAll(".typing")
+  const buttonsDisplaced = document.querySelectorAll(".btn-displaced")
+  buttonsDisplaced.forEach(button => {
+    button.classList.remove("btn-displaced")
+  })
   for (i = 0; i < 5; i++) {
+    let letterRefactor = letrecoSplited[i].normalize('NFD').replace(/[\u0300-\u036f]/g, "")
     if (!letreco.includes(guessSplited[i])) {
       currentColumns[i].classList.add("wrong")
       document.getElementById(guessSplited[i]).classList.add("btn-disabled")
-    } else if (letrecoSplited[i] == guessSplited[i]) {
+    } else if (letterRefactor == guessSplited[i]) {
       currentColumns[i].classList.remove("displaced")
       currentColumns[i].classList.add("right")
+      if (acentosArray.includes(letrecoSplited[i])) {
+        currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
+      }
       document.getElementById(guessSplited[i]).classList.add("btn-right")
     } else if (letreco.includes(guessSplited[i])) {
       currentColumns[i].classList.add("displaced")
@@ -111,13 +129,24 @@ const checkGuess = () => {
     }
   }
 
-  if (guess === letreco) {
-    // document.getElementById("btnRefresh").classList.remove("button-refresh-hidden")
-    // document.getElementById("btnRefresh").classList.add("button-refresh")
+  if (guess === letreco.normalize('NFD').replace(/[\u0300-\u036f]/g, "")) {
+    document.querySelector(".typing-selected").classList.remove("typing-selected")
+    document.querySelector(".keyboard-container").classList.add("keyboard-animation")
+    setTimeout(() => {
+      document.querySelector(".keyboard-container").setAttribute("style", "visibility: hidden;")
+    }, 1010)
+    const resultMessag = document.getElementById("resultMessage")
+    resultMessag.classList.add("message-row-container")
+    resultMessag.setAttribute("style", "background-color: #3aa394;")
+    resultMessag.textContent = "Incrível!"
+    setTimeout(() =>{
+      createButtonResult()
+    }, 900)
     moveToHiddenRow()
     return
   } else {
     if (currentRow === 5) {
+      document.querySelector(".typing-selected").classList.remove("typing-selected")
       for (i = 0; i < 5; i++) {
         const lastRowColumn = document.getElementById("last-row" + 5 + "column" + i)
         lastRowColumn.classList.remove("displaced")
@@ -125,8 +154,17 @@ const checkGuess = () => {
         lastRowColumn.classList.remove("right")
         lastRowColumn.classList.add("wrong-result")
       }
-      // document.getElementById("btnRefresh").classList.remove("button-refresh-hidden")
-      // document.getElementById("btnRefresh").classList.add("button-refresh")
+      document.querySelector(".keyboard-container").classList.add("keyboard-animation")
+      setTimeout(() => {
+        document.querySelector(".keyboard-container").setAttribute("style", "visibility: hidden;")
+      }, 1010)
+      const resultMessag = document.getElementById("resultMessage")
+      resultMessag.classList.add("message-row-container")
+      resultMessag.setAttribute("style", "background-color: #cf2858;")
+      resultMessag.textContent = `Errou! A palavra era ${letreco}`
+      setTimeout(() =>{
+        createButtonResult()
+      }, 900)
       moveToHiddenRow()
     } else {
       moveToNextRow()
@@ -142,13 +180,16 @@ const moveToNextRow = () => {
   }
   currentRow++
   currentColumn = 0
-
+  let idRow = currentRow == 5 ? "last-row" : "row"
   const currentRowEl = document.querySelector("#row" + currentRow)
   var currentColumns = currentRowEl.querySelectorAll(".tile-column")
   for (let index = 0; index < currentColumns.length; index++) {
     currentColumns[index].classList.remove("disabled")
     currentColumns[index].classList.add("typing")
   }
+
+  document.querySelector(".typing-selected").classList.remove("typing-selected")
+  document.getElementById(`${idRow}${currentRow}column${currentColumn}`).classList.add("typing-selected")
 }
 
 const moveToHiddenRow = () => {
@@ -162,32 +203,30 @@ const moveToHiddenRow = () => {
   currentRow = 6
 }
 
-
-// const currentRowEl = document.querySelector("#row" + currentRow)
-// var currentColumns = currentRowEl.querySelectorAll(".tile-column")
-// currentColumns[currentColumn].classList.add("typing-selected")
+document.getElementById(`row${0}column${0}`).classList.add("typing-selected")
 const handleKeyboardOnClick = (key) => {
+
   if (currentColumn === columns) {
     return
   }
+
   let currentTile = undefined
-  if (currentRow == 5) {
-    currentTile = document.querySelector(
-      "#last-row" + currentRow + "column" + currentColumn
-    )
-  } else {
-    currentTile = document.querySelector(
-      "#row" + currentRow + "column" + currentColumn
-    )
-  }
+
+  let idRow = currentRow == 5 ? "last-row" : "row"
+
+  currentTile = document.querySelector(
+    "#" + idRow + currentRow + "column" + currentColumn
+  )
 
   currentTile.textContent = key
   guesses[currentRow][currentColumn] = key
   currentColumn++
-  // const currentRowEl = document.querySelector("#row" + currentRow)
-  // var currentColumns = currentRowEl.querySelectorAll(".tile-column")
-  // currentColumns[currentColumn-1].classList.remove("typing-selected")
-  // currentColumns[currentColumn].classList.add("typing-selected")
+
+
+  if (currentColumn <= 4) {
+    document.querySelector(".typing-selected").classList.remove("typing-selected")
+    document.getElementById(`${idRow}${currentRow}column${currentColumn}`).classList.add("typing-selected")
+  }
 }
 
 const createKeyboardRow = (keys, keyboardRow) => {
@@ -200,6 +239,23 @@ const createKeyboardRow = (keys, keyboardRow) => {
   })
 }
 
+function createButtonResult() {
+  const buttonResultRow = document.querySelector(".result-container")
+
+  const buttonSummary = document.createElement("dib")
+  buttonSummary.textContent = "Pontuação"
+  buttonSummary.classList.add("buttons-row-container")
+  buttonSummary.classList.add("button-col-1")
+  buttonResultRow.append(buttonSummary)
+
+  const buttonNextWord = document.createElement("div")
+  buttonNextWord.textContent = "Próxima Palavra"
+  buttonNextWord.addEventListener("click", () => location.reload())
+  buttonNextWord.classList.add("buttons-row-container")
+  buttonNextWord.classList.add("button-col-2")
+  buttonResultRow.append(buttonNextWord)
+}
+
 createKeyboardRow(keysFirstRow, keyboardFirstRow)
 createKeyboardRow(keysSecondRow, keyboardSecondRow)
 createKeyboardRow(keysThirdRow, keyboardThirdRow)
@@ -209,10 +265,19 @@ const handleBackspace = () => {
     return
   }
 
+  let idRow = currentRow == 5 ? "last-row" : "row"
+  userSelectedColumn ? currentColumn++ : currentColumn
   currentColumn--
   guesses[currentRow][currentColumn] = ""
-  const tile = document.querySelector("#row" + currentRow + "column" + currentColumn)
+  const tile = document.querySelector("#" + idRow + currentRow + "column" + currentColumn)
   tile.textContent = ""
+
+
+  if (currentColumn >= 0) {
+    document.querySelector(".typing-selected").classList.remove("typing-selected")
+    document.getElementById(`${idRow}${currentRow}column${currentColumn}`).classList.add("typing-selected")
+  }
+  userSelectedColumn = false
 }
 
 const backspaceButton = document.createElement("input")
@@ -231,9 +296,6 @@ keyboardThirdRow.append(enterButton)
 
 document.onkeydown = function (evt) {
   evt = evt || window.evt
-  // if (evt.key == "F5") {
-  //   evt.preventDefault()
-  // }
   if (evt.key === "Enter") {
     checkGuess()
   } else if (evt.key === "Backspace") {
@@ -244,8 +306,9 @@ document.onkeydown = function (evt) {
 }
 
 function sorteiaPalavra() {
-  let index = Math.floor(Math.random() * (0 - palavrasArray.length)) + 0
-  const palavraSort = palavrasArray[index < 0 ? index * -1 : index]
+  let index = Math.floor(Math.random() * (0 - wordsArray.length)) + 0
+  const palavraSort = wordsArray[index < 0 ? index * -1 : index]
   console.log(palavraSort.normalize().toUpperCase())
   return palavraSort.normalize().toUpperCase()
 }
+
