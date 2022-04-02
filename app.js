@@ -46,12 +46,22 @@ const keysSecondRow = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
 const keysThirdRow = ["Z", "X", "C", "V", "B", "N", "M"]
 const acentosArray = ["Á", "À", "Â", "Ã", "É", "È", "Ê", "Í", "Ì", "Î", "Ó", "Ò", "Ô", "Õ", "Ú", "Ù", "Û", "Ç"]
 
+let sessionSummary = sessionStorage.getItem("userSummary") ? JSON.parse(sessionStorage.getItem("userSummary")) : null
+let userSummary = sessionSummary == null ? {
+  rightGuesses: 0,
+  wrongGuesses: 0,
+  totalGuessesCounter: 0,
+  tries: []
+} : sessionSummary
+
+let tries = 1
+
 const rows = 7
 const columns = 5
 let currentRow = 0
 let currentColumn = 0
 let userSelectedColumn = false
-let letreco = sorteiaPalavra()
+let letreco = "VASCO"//sorteiaPalavra()
 let letrecoMap = {}
 for (let index = 0; index < letreco.length; index++) {
   letrecoMap[letreco[index]] = index
@@ -89,9 +99,10 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
 function setSelected(element) {
   let clickedLine = element.split("w")[1].split("c")[0]
   let clickedColumn = element.split("n")[1]
+  let idRow = currentRow == 5 ? "last-row" : "row"
   if (currentRow == clickedLine) {
     for (i = 0; i < 5; i++) {
-      document.getElementById(`row${currentRow}column${i}`).classList.remove("typing-selected")
+      document.getElementById(`${idRow}${currentRow}column${i}`).classList.remove("typing-selected")
     }
     document.getElementById(element).classList.add("typing-selected")
     currentColumn = parseInt(clickedColumn, 8)
@@ -99,33 +110,42 @@ function setSelected(element) {
   }
 }
 const checkGuess = () => {
+  console.log(userSummary)
   const guess = guesses[currentRow].join("")
   const letrecoSplited = letreco.split("")
   const guessSplited = guess.split("")
   if (guess.length !== columns) {
     return
   }
-
   var currentColumns = document.querySelectorAll(".typing")
-  const buttonsDisplaced = document.querySelectorAll(".btn-displaced")
-  buttonsDisplaced.forEach(button => {
-    button.classList.remove("btn-displaced")
-  })
+  let letrecoAux = letreco.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
   for (i = 0; i < 5; i++) {
     let letterRefactor = letrecoSplited[i].normalize('NFD').replace(/[\u0300-\u036f]/g, "")
     if (!letreco.includes(guessSplited[i])) {
       currentColumns[i].classList.add("wrong")
       document.getElementById(guessSplited[i]).classList.add("btn-disabled")
-    } else if (letterRefactor == guessSplited[i]) {
-      currentColumns[i].classList.remove("displaced")
-      currentColumns[i].classList.add("right")
-      if (acentosArray.includes(letrecoSplited[i])) {
-        currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
+    } else {
+      if (letterRefactor == guessSplited[i]) {
+        const buttonsDisplaced = document.querySelectorAll(".btn-displaced")
+        buttonsDisplaced.forEach(button => {
+          if (button.textContent == guessSplited[i]) {
+            button.classList.remove("btn-displaced")
+          }
+        })
+        letrecoAux = letrecoAux.replace(guessSplited[i], "")
+        currentColumns[i].classList.remove("displaced")
+        currentColumns[i].classList.add("right")
+        if (acentosArray.includes(letrecoSplited[i])) {
+          currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
+        }
+        document.getElementById(guessSplited[i]).classList.add("btn-right")
+      } else if (letreco.includes(guessSplited[i]) && letrecoAux.indexOf(guessSplited[i]) != -1) {
+        letrecoAux = letrecoAux.replace(guessSplited[i], "")
+        currentColumns[i].classList.add("displaced")
+        document.getElementById(guessSplited[i]).classList.add("btn-displaced")
+      } else {
+        currentColumns[i].classList.add("wrong")
       }
-      document.getElementById(guessSplited[i]).classList.add("btn-right")
-    } else if (letreco.includes(guessSplited[i])) {
-      currentColumns[i].classList.add("displaced")
-      document.getElementById(guessSplited[i]).classList.add("btn-displaced")
     }
   }
 
@@ -139,10 +159,15 @@ const checkGuess = () => {
     resultMessag.classList.add("message-row-container")
     resultMessag.setAttribute("style", "background-color: #3aa394;")
     resultMessag.textContent = "Incrível!"
-    setTimeout(() =>{
+    setTimeout(() => {
       createButtonResult()
     }, 900)
     moveToHiddenRow()
+    userSummary.tries.push({ word: letreco, numberOfTries: tries, result: true })
+    userSummary.rightGuesses++
+    userSummary.totalGuessesCounter++
+    sessionStorage.setItem("userSummary", JSON.stringify(userSummary))
+    createSummary()
     return
   } else {
     if (currentRow === 5) {
@@ -160,13 +185,20 @@ const checkGuess = () => {
       }, 1010)
       const resultMessag = document.getElementById("resultMessage")
       resultMessag.classList.add("message-row-container")
-      resultMessag.setAttribute("style", "background-color: #cf2858;")
+      resultMessag.setAttribute("style", "background-color: #ab2218;")
       resultMessag.textContent = `Errou! A palavra era ${letreco}`
-      setTimeout(() =>{
+      setTimeout(() => {
         createButtonResult()
       }, 900)
       moveToHiddenRow()
+      userSummary.tries.push({ word: letreco, numberOfTries: tries, result: false })
+      userSummary.wrongGuesses++
+      userSummary.totalGuessesCounter++
+      sessionStorage.setItem("totalGuessesCounter", totalGuessesCounter + 1)
+      sessionStorage.setItem("userSummary", JSON.stringify(userSummary))
+      createSummary()
     } else {
+      tries++
       moveToNextRow()
     }
   }
@@ -244,21 +276,22 @@ function createButtonResult() {
 
   const buttonSummary = document.createElement("dib")
   buttonSummary.textContent = "Pontuação"
+  buttonSummary.addEventListener("click", () => openNav())
   buttonSummary.classList.add("buttons-row-container")
-  buttonSummary.classList.add("button-col-1")
   buttonResultRow.append(buttonSummary)
 
   const buttonNextWord = document.createElement("div")
   buttonNextWord.textContent = "Próxima Palavra"
   buttonNextWord.addEventListener("click", () => location.reload())
   buttonNextWord.classList.add("buttons-row-container")
-  buttonNextWord.classList.add("button-col-2")
   buttonResultRow.append(buttonNextWord)
 }
 
 createKeyboardRow(keysFirstRow, keyboardFirstRow)
 createKeyboardRow(keysSecondRow, keyboardSecondRow)
 createKeyboardRow(keysThirdRow, keyboardThirdRow)
+createSummary()
+
 
 const handleBackspace = () => {
   if (currentColumn === 0) {
@@ -282,7 +315,7 @@ const handleBackspace = () => {
 
 const backspaceButton = document.createElement("input")
 backspaceButton.addEventListener("click", handleBackspace)
-backspaceButton.value = "<"
+backspaceButton.value = "⌫"
 backspaceButton.type = "button"
 backspaceButton.id = "backspaceButton"
 keyboardSecondRow.append(backspaceButton)
@@ -293,6 +326,18 @@ enterButton.value = "ENTER"
 enterButton.type = "button"
 enterButton.id = "enterButton"
 keyboardThirdRow.append(enterButton)
+
+
+const header = document.querySelector(".header-container")
+let buttonOpenNavBar = document.createElement("div")
+buttonOpenNavBar.textContent = "☰"
+buttonOpenNavBar.addEventListener("click", () => openNav())
+buttonOpenNavBar.classList.add("openbtn")
+header.append(buttonOpenNavBar)
+
+let title = document.createElement("div")
+title.textContent = "LETRECO"
+header.append(title)
 
 document.onkeydown = function (evt) {
   evt = evt || window.evt
@@ -305,6 +350,58 @@ document.onkeydown = function (evt) {
   }
 }
 
+function createSummary() {
+  let totalGuessesCounter = userSummary.totalGuessesCounter
+
+  let rightCount = userSummary.rightGuesses == undefined ? 0 : userSummary.rightGuesses
+  let rightGuesses = document.getElementById("rightGuesses")
+  rightGuesses.textContent = `Acertos: ${rightCount}`
+
+  let wrongCount = userSummary.wrongGuesses == undefined ? 0 : userSummary.wrongGuesses
+  let wrongGuesses = document.getElementById("wrongGuesses")
+  wrongGuesses.textContent = `Erros: ${wrongCount}`
+
+  let percentageRight = totalGuessesCounter == 0 ? 0 : (rightCount * 100) / totalGuessesCounter
+  let percentageRightGuesses = document.getElementById("percentageRightGuesses")
+  percentageRightGuesses.textContent = `Percentual de acertos: ${percentageRight}%`
+
+  let percentagewrong = totalGuessesCounter == 0 ? 0 : (wrongCount * 100) / totalGuessesCounter
+  let percentagewrongGuesses = document.getElementById("percentageWrongGuesses")
+  percentagewrongGuesses.textContent = `Percentual de erros: ${percentagewrong}%`
+
+  let totalGuesses = document.getElementById("totalGuesses")
+  totalGuesses.textContent = `Total de jogadas: ${totalGuessesCounter}`
+
+  let old_summaryTableBody = document.getElementById("summaryTableBody")
+
+  let summaryTableBody = document.createElement("tbody")
+  summaryTableBody.setAttribute("id", "summaryTableBody")
+
+  userSummary.tries.forEach(trie => {
+    let tr = document.createElement("tr")
+
+    //create word column
+    let td = document.createElement("td")
+    let p = document.createElement("p")
+    p.textContent = trie.word
+    p.classList.add(trie.result ? "status-right" : "status-wrong")
+    td.append(p)
+    tr.append(td)
+
+    //create tries column
+    td = document.createElement("td")
+    p = document.createElement("p")
+    p.textContent = trie.numberOfTries
+    td.append(p)
+    tr.append(td)
+
+    summaryTableBody.append(tr)
+  })
+  let table = document.getElementById("summaryTable")
+  table.replaceChild(summaryTableBody, old_summaryTableBody)
+
+}
+
 function sorteiaPalavra() {
   let index = Math.floor(Math.random() * (0 - wordsArray.length)) + 0
   const palavraSort = wordsArray[index < 0 ? index * -1 : index]
@@ -312,3 +409,15 @@ function sorteiaPalavra() {
   return palavraSort.normalize().toUpperCase()
 }
 
+function openNav() {
+  let windowWidth = window.document.body.clientWidth
+  document.getElementById("mySidebar").style.width = windowWidth < 768 ? "100%" : "28%";
+  document.querySelector(".openbtn").removeEventListener("click", () => openNav())
+  document.querySelector(".openbtn").addEventListener("click", () => closeNav())
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.querySelector(".openbtn").removeEventListener("click", () => closeNav())
+  document.querySelector(".openbtn").addEventListener("click", () => openNav())
+}
