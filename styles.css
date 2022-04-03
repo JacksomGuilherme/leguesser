@@ -10,10 +10,9 @@
     --color-white: #f4f3f1;
 }
 
-@media only screen and (min-width: 980px) {
+@media only screen and (min-width: 768px) {
     body {
         margin: 0;
-        height: 100%;
         overflow: hidden;
         background-color: var(--color-background);
         color: var(--color-white);
@@ -26,7 +25,8 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
-        width: 100%
+        height: 100%;
+        width: 100%;
     }
 
     .header-container {
@@ -48,7 +48,9 @@
 
     .title-container-header {
         text-align: center;
-        width: 510px;
+        width: 150vw;
+        max-width: 500px;
+        margin-top: 0.5em;
         margin-left: auto;
         margin-right: auto;
         flex: 1 0 auto;
@@ -63,13 +65,16 @@
 
     .tile-container {
         text-align: center;
-        width: 510px;
+        width: 150vw;
+        max-width: 500px;
         margin-top: 0.02rem;
         justify-content: center;
     }
 
     .app-container {
         max-width: 500px;
+        max-height: 630px;
+        width: 150vw;
         margin-left: auto;
         margin-right: auto;
         margin-top: 0.5em;
@@ -77,6 +82,7 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+        align-content: center;
         z-index: 0;
         justify-content: center;
     }
@@ -98,8 +104,8 @@
 
     .tile-column {
         background-color: var(--color-tile-background);
-        height: 77px;
-        width: 75px;
+        height: 1.9em;
+        width: 1.85em;
         border-radius: 0.65rem;
         margin-right: 0.25rem;
         font-size: 40px;
@@ -212,23 +218,6 @@
         display: flex;
     }
 
-    .button-refresh {
-        position: absolute;
-        top: 2%;
-        right: 30%;
-        width: 5%;
-        height: 5%;
-    }
-
-    .button-refresh-hidden {
-        visibility: hidden;
-        position: absolute;
-        top: 2%;
-        right: 30%;
-        width: 5%;
-        height: 5%;
-    }
-
     button {
         touch-action: manipulation;
         outline: none;
@@ -241,8 +230,8 @@
         align-items: center;
         border-radius: 0.45em;
         font-weight: 500;
-        width: 70px;
-        height: 80px;
+        width: 2.188em;
+        height: 2.500em;
         font-family: 'Mitr', sans-serif;
         cursor: pointer;
         border: none;
@@ -258,15 +247,15 @@
         font-size: 2em;
         align-items: center;
         border-radius: 0.45em;
-        width: 70px;
-        height: 80px;
+        width: 2.188em;
+        height: 2.500em;
         font-family: 'Mitr', sans-serif;
         cursor: pointer;
         border: none;
         color: var(--color-white);
-        font-size: 2.5em;
-        padding-left: 15px;
-        margin-left: 1.0em;
+        font-size: 2em;
+        padding-left: 2.5%;
+        margin-left: 1.25em;
     }
 
     #enterButton {
@@ -640,7 +629,6 @@
 @media only screen and (max-width: 768px) {
     body {
         margin: 0;
-        height: 100%;
         overflow: hidden;
         background-color: var(--color-background);
         color: var(--color-white);
@@ -653,21 +641,22 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
-        width: 100%
+        width: 100%;
+        height: 100%;
     }
 
     .header-container {
+        overflow: hidden;
         text-align: center;
         top: 0;
-        width: 100%;
+        width: 150vw;
         font-size: 3em;
-        max-width: 768px;
+        max-width: 500px;
         flex: 1 0 auto;
         background-color: var(--color-background);
         z-index: 5;
         align-items: center;
-        margin-left: auto;
-        margin-right: auto;
+        align-content: center;
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -675,32 +664,36 @@
 
     .title-container-header {
         text-align: center;
-        width: 100%;
+        width: 150vw;
+        max-width: 500px;
         margin-top: -1em;
-        margin-left: auto;
-        margin-right: auto;
         flex: 1 0 auto;
         z-index: 1;
         justify-content: center;
+        align-content: center;
     }
 
     .tile-container {
+        max-width: 500px;
+        width: 150vw;
         text-align: center;
         height: 61vh;
         display: block;
         margin-top: 0.02rem;
         justify-content: center;
+        align-content: center;
     }
 
     .app-container {
         max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
+        max-height: 630px;
+        width: 150vw;
         margin-top: 0.5em;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         position: relative;
+        align-content: center;
         z-index: 0;
     }
 
@@ -721,8 +714,8 @@
 
     .tile-column {
         background-color: var(--color-tile-background);
-        height: 67px;
-        width: 65px;
+        height: 1.65em;
+        width: 1.60em;
         border-radius: 0.65rem;
         margin-right: 0.25rem;
         font-size: 40px;
@@ -793,7 +786,7 @@
     }
 
     .keyboard-container {
-        margin-top: -5.5em;
+        margin-top: 10%;
         display: flex;
         flex-direction: column;
         z-index: 2;
@@ -831,23 +824,8 @@
     .keyboard-row-container-third {
         align-items: center;
         display: flex;
-    }
-
-    .button-refresh {
-        position: absolute;
-        top: 2%;
-        right: 30%;
-        width: 5%;
-        height: 5%;
-    }
-
-    .button-refresh-hidden {
-        visibility: hidden;
-        position: absolute;
-        top: 2%;
-        right: 30%;
-        width: 5%;
-        height: 5%;
+        margin-left: 5%;
+        width: 90%;
     }
 
     button {
@@ -862,8 +840,8 @@
         align-items: center;
         border-radius: 0.45em;
         font-weight: 500;
-        width: 70px;
-        height: 80px;
+        width: 2.188em;
+        height: 2.500em;
         font-family: 'Mitr', sans-serif;
         cursor: pointer;
         border: none;
@@ -880,8 +858,8 @@
         font-size: 2em;
         align-items: center;
         border-radius: 0.45em;
-        width: 70px;
-        height: 80px;
+        width: 2.188em;
+        height: 2.500em;
         font-family: 'Mitr', sans-serif;
         cursor: pointer;
         border: none;
@@ -902,8 +880,8 @@
         align-items: center;
         border-radius: 0.45em;
         font-weight: 500;
-        width: 150px;
-        height: 80px;
+        width: 4.376em;
+        height: 2.500em;
         font-family: 'Mitr', sans-serif;
         cursor: pointer;
         border: none;

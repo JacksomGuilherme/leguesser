@@ -56,12 +56,14 @@ let userSummary = sessionSummary == null ? {
 
 let tries = 1
 
+let windowWidth = window.document.body.clientWidth
+
 const rows = 7
 const columns = 5
 let currentRow = 0
 let currentColumn = 0
 let userSelectedColumn = false
-let letreco = sorteiaPalavra()
+let letreco = "VARÃO"//sorteiaPalavra()
 let letrecoMap = {}
 for (let index = 0; index < letreco.length; index++) {
   letrecoMap[letreco[index]] = index
@@ -118,31 +120,30 @@ const checkGuess = () => {
     return
   }
   var currentColumns = document.querySelectorAll(".typing")
+  let letrecoRefactor = letreco.normalize('NFD').replace(/[\u0300-\u036f]/g, "").split("")
   let letrecoAux = letreco.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
   for (i = 0; i < 5; i++) {
-    let letterRefactor = letrecoSplited[i].normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-    if (!letreco.includes(guessSplited[i])) {
+    if (!letrecoRefactor.includes(guessSplited[i])) {
       currentColumns[i].classList.add("wrong")
       document.getElementById(guessSplited[i]).classList.add("btn-disabled")
     } else {
-      if (letterRefactor == guessSplited[i]) {
+      if (letrecoRefactor[i] == guessSplited[i]) {
         const buttonsDisplaced = document.querySelectorAll(".btn-displaced")
         buttonsDisplaced.forEach(button => {
           if (button.textContent == guessSplited[i]) {
             button.classList.remove("btn-displaced")
           }
         })
-        letrecoAux = letrecoAux.replace(guessSplited[i], "")
         currentColumns[i].classList.remove("displaced")
         currentColumns[i].classList.add("right")
         if (acentosArray.includes(letrecoSplited[i])) {
           currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
         }
         document.getElementById(guessSplited[i]).classList.add("btn-right")
-      } else if (letreco.includes(guessSplited[i]) && letrecoAux.indexOf(guessSplited[i]) != -1) {
-        letrecoAux = letrecoAux.replace(guessSplited[i], "")
+      } else if (letrecoRefactor.includes(guessSplited[i])) {
         currentColumns[i].classList.add("displaced")
         document.getElementById(guessSplited[i]).classList.add("btn-displaced")
+        letrecoRefactor[i] = letrecoRefactor[i].replace(guessSplited[i], "")
       } else {
         currentColumns[i].classList.add("wrong")
       }
@@ -322,7 +323,7 @@ keyboardSecondRow.append(backspaceButton)
 
 const enterButton = document.createElement("input")
 enterButton.addEventListener("click", checkGuess)
-enterButton.value = "ENTER"
+enterButton.value = windowWidth < 768 ? "⇥" : "ENTER"
 enterButton.type = "button"
 enterButton.id = "enterButton"
 keyboardThirdRow.append(enterButton)
@@ -410,7 +411,6 @@ function sorteiaPalavra() {
 }
 
 function openNav() {
-  let windowWidth = window.document.body.clientWidth
   document.getElementById("mySidebar").style.width = windowWidth < 768 ? "100%" : "28%";
   document.querySelector(".openbtn").removeEventListener("click", () => openNav())
   document.querySelector(".openbtn").addEventListener("click", () => closeNav())
