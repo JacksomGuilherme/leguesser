@@ -58,7 +58,7 @@ let tries = 1
 
 let windowWidth = window.document.body.clientWidth
 
-const rows = 7
+const rows = 6
 const columns = 5
 let currentRow = 0
 let currentColumn = 0
@@ -74,11 +74,7 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
   guesses[rowIndex] = new Array(columns)
   const tileRow = document.createElement("div")
   tileRow.setAttribute("id", "row" + rowIndex)
-  if (rowIndex == 6) {
-    tileRow.setAttribute("class", "tile-row-hidden")
-  } else {
-    tileRow.setAttribute("class", "tile-row")
-  }
+  tileRow.setAttribute("class", "tile-row")
   for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
     const tileColumn = document.createElement("div")
     if (rowIndex == 5) {
@@ -152,22 +148,23 @@ const checkGuess = () => {
 
   if (guess === letreco.normalize('NFD').replace(/[\u0300-\u036f]/g, "")) {
     document.querySelector(".typing-selected").classList.remove("typing-selected")
-    document.querySelector(".keyboard-container").classList.add("keyboard-animation")
-    setTimeout(() => {
-      document.querySelector(".keyboard-container").setAttribute("style", "visibility: hidden;")
-    }, 1010)
-    const resultMessag = document.getElementById("resultMessage")
-    resultMessag.classList.add("message-row-container")
-    resultMessag.setAttribute("style", "background-color: #3aa394;")
-    resultMessag.textContent = "Incrível!"
-    setTimeout(() => {
-      createButtonResult()
-    }, 900)
     moveToHiddenRow()
     userSummary.tries.push({ word: letreco, numberOfTries: tries, result: true })
     userSummary.rightGuesses++
     userSummary.totalGuessesCounter++
     sessionStorage.setItem("userSummary", JSON.stringify(userSummary))
+
+    document.getElementById("resultImgToast").setAttribute("src", "./images/right-result.png")
+    document.getElementById("resultTitleToast").textContent = "Incrível!"
+    document.getElementById("resultBodyToast").textContent = "Veja sua pontuação clicando em ☰ ou vá para a póxima palavra"
+
+    var resultMessageToast = document.getElementById('resultMessageToast')
+    
+    if (resultMessageToast) {
+      var toast = new bootstrap.Toast(resultMessageToast)
+      toast.show()
+    }
+    
     createSummary()
     return
   } else {
@@ -180,22 +177,22 @@ const checkGuess = () => {
         lastRowColumn.classList.remove("right")
         lastRowColumn.classList.add("wrong-result")
       }
-      document.querySelector(".keyboard-container").classList.add("keyboard-animation")
-      setTimeout(() => {
-        document.querySelector(".keyboard-container").setAttribute("style", "visibility: hidden;")
-      }, 1010)
-      const resultMessag = document.getElementById("resultMessage")
-      resultMessag.classList.add("message-row-container")
-      resultMessag.setAttribute("style", "background-color: #ab2218;")
-      resultMessag.textContent = `Errou! A palavra era ${letreco}`
-      setTimeout(() => {
-        createButtonResult()
-      }, 900)
+
+      document.getElementById("resultImgToast").setAttribute("src", "./images/wrong-result.png")
+      document.getElementById("resultTitleToast").textContent = "Errou!"
+      document.getElementById("resultBodyToast").textContent = `A palavra era ${letreco}, veja sua pontuação clicando em ☰ ou vá para a póxima palavra`
+  
+      var resultMessageToast = document.getElementById('resultMessageToast')
+      
+      if (resultMessageToast) {
+        var toast = new bootstrap.Toast(resultMessageToast)
+        toast.show()
+      }
+
       moveToHiddenRow()
       userSummary.tries.push({ word: letreco, numberOfTries: tries, result: false })
       userSummary.wrongGuesses++
       userSummary.totalGuessesCounter++
-      sessionStorage.setItem("totalGuessesCounter", totalGuessesCounter + 1)
       sessionStorage.setItem("userSummary", JSON.stringify(userSummary))
       createSummary()
     } else {
@@ -233,7 +230,7 @@ const moveToHiddenRow = () => {
     typingColumns[index].classList.remove("typing")
     typingColumns[index].classList.add("disabled")
   }
-  currentRow = 6
+  currentRow = 7
 }
 
 document.getElementById(`row${0}column${0}`).classList.add("typing-selected")
@@ -267,25 +264,16 @@ const createKeyboardRow = (keys, keyboardRow) => {
     var buttonElement = document.createElement("button")
     buttonElement.textContent = key
     buttonElement.setAttribute("id", key)
+    if(windowWidth >= 768){
+      buttonElement.style.borderRadius = "0.45rem"
+    }
+    buttonElement.style.padding = "0"
+    buttonElement.classList.add("btn")
+    buttonElement.classList.add("btn-outline-dark")
+    buttonElement.classList.add("char")
     buttonElement.addEventListener("click", () => handleKeyboardOnClick(key))
     keyboardRow.append(buttonElement)
   })
-}
-
-function createButtonResult() {
-  const buttonResultRow = document.querySelector(".result-container")
-
-  const buttonSummary = document.createElement("dib")
-  buttonSummary.textContent = "Pontuação"
-  buttonSummary.addEventListener("click", () => openNav())
-  buttonSummary.classList.add("buttons-row-container")
-  buttonResultRow.append(buttonSummary)
-
-  const buttonNextWord = document.createElement("div")
-  buttonNextWord.textContent = "Próxima Palavra"
-  buttonNextWord.addEventListener("click", () => location.reload())
-  buttonNextWord.classList.add("buttons-row-container")
-  buttonResultRow.append(buttonNextWord)
 }
 
 createKeyboardRow(keysFirstRow, keyboardFirstRow)
@@ -314,31 +302,56 @@ const handleBackspace = () => {
   userSelectedColumn = false
 }
 
-const backspaceButton = document.createElement("input")
+const keyboardContainer = document.querySelector(".keyboard-container")
+
+const backspaceButton = document.createElement("button")
 backspaceButton.addEventListener("click", handleBackspace)
-backspaceButton.value = "⌫"
-backspaceButton.type = "button"
+backspaceButton.textContent = "⌫"
 backspaceButton.id = "backspaceButton"
+if(windowWidth >= 768){
+  backspaceButton.style.borderRadius = "0.45rem"
+}
+backspaceButton.classList.add("btn")
+backspaceButton.classList.add("btn-outline-dark")
+backspaceButton.classList.add("char")
 keyboardSecondRow.append(backspaceButton)
 
-const enterButton = document.createElement("input")
+const enterButton = document.createElement("button")
 enterButton.addEventListener("click", checkGuess)
-enterButton.value = windowWidth < 768 ? "⇥" : "ENTER"
-enterButton.type = "button"
+enterButton.textContent = windowWidth < 768 ? "⇥" : "ENTER"
 enterButton.id = "enterButton"
+if(windowWidth >= 768){
+  enterButton.style.borderRadius = "0.45rem"
+}
+enterButton.classList.add("btn")
+enterButton.classList.add("btn-outline-dark")
+enterButton.classList.add("char")
 keyboardThirdRow.append(enterButton)
 
 
 const header = document.querySelector(".header-container")
-let buttonOpenNavBar = document.createElement("div")
+let buttonOpenNavBar = document.createElement("button")
 buttonOpenNavBar.textContent = "☰"
-buttonOpenNavBar.addEventListener("click", () => openNav())
-buttonOpenNavBar.classList.add("openbtn")
+buttonOpenNavBar.setAttribute("data-bs-toggle", "offcanvas")
+buttonOpenNavBar.setAttribute("href", "#offcanvasScoreBoard")
+buttonOpenNavBar.setAttribute("role", "button")
+buttonOpenNavBar.setAttribute("aria-controls", "offcanvasScoreBoard")
+buttonOpenNavBar.classList.add("btn")
+buttonOpenNavBar.classList.add("btn-outline-dark")
+buttonOpenNavBar.classList.add("char")
 header.append(buttonOpenNavBar)
 
 let title = document.createElement("div")
 title.textContent = "LETRECO"
 header.append(title)
+
+let buttonNextWord = document.createElement("button")
+buttonNextWord.textContent = "🡢"
+buttonNextWord.classList.add("btn")
+buttonNextWord.classList.add("btn-outline-dark")
+buttonNextWord.classList.add("char")
+
+header.append(buttonNextWord)
 
 document.onkeydown = function (evt) {
   evt = evt || window.evt
@@ -383,18 +396,20 @@ function createSummary() {
 
     //create word column
     let td = document.createElement("td")
-    let p = document.createElement("p")
-    p.textContent = trie.word
-    p.classList.add(trie.result ? "status-right" : "status-wrong")
-    td.append(p)
+    td.textContent = trie.word
     tr.append(td)
 
     //create tries column
     td = document.createElement("td")
-    p = document.createElement("p")
-    p.textContent = trie.numberOfTries
-    td.append(p)
+    td.textContent = trie.numberOfTries
     tr.append(td)
+
+    if(trie.result){
+      tr.classList.add("table-success")
+    }else{
+      tr.classList.add("table-danger")
+    }
+    
 
     summaryTableBody.append(tr)
   })
@@ -410,14 +425,12 @@ function sorteiaPalavra() {
   return palavraSort.normalize().toUpperCase()
 }
 
-function openNav() {
-  document.getElementById("mySidebar").style.width = windowWidth < 768 ? "100%" : "28%";
-  document.querySelector(".openbtn").removeEventListener("click", () => openNav())
-  document.querySelector(".openbtn").addEventListener("click", () => closeNav())
-}
+var toastTrigger = document.getElementById('liveToastBtn')
+var toastLiveExample = document.getElementById('liveToast')
+if (toastTrigger) {
+  toastTrigger.addEventListener('click', function () {
+    var toast = new bootstrap.Toast(toastLiveExample)
 
-function closeNav() {
-  document.getElementById("mySidebar").style.width = "0";
-  document.querySelector(".openbtn").removeEventListener("click", () => closeNav())
-  document.querySelector(".openbtn").addEventListener("click", () => openNav())
+    toast.show()
+  })
 }
