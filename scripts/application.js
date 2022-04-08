@@ -46,6 +46,9 @@ const keysSecondRow = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
 const keysThirdRow = ["Z", "X", "C", "V", "B", "N", "M"]
 const acentosArray = ["Á", "À", "Â", "Ã", "É", "È", "Ê", "Í", "Ì", "Î", "Ó", "Ò", "Ô", "Õ", "Ú", "Ù", "Û", "Ç"]
 
+let indexShowAgainCheckSession = sessionStorage.getItem("indexShowAgainCheck")
+let darkModeEnabledSession = sessionStorage.getItem("darkModeEnabled") == 'true'
+
 let sessionSummary = sessionStorage.getItem("userSummary") ? JSON.parse(sessionStorage.getItem("userSummary")) : null
 let userSummary = sessionSummary == null ? {
   rightGuesses: 0,
@@ -63,7 +66,7 @@ const columns = 5
 let currentRow = 0
 let currentColumn = 0
 let userSelectedColumn = false
-let letreco = sorteiaPalavra()
+let letreco = "VASCO"//sortWord()
 let letrecoMap = {}
 for (let index = 0; index < letreco.length; index++) {
   letrecoMap[letreco[index]] = index
@@ -123,26 +126,28 @@ const checkGuess = () => {
       currentColumns[i].classList.add("wrong")
       document.getElementById(guessSplited[i]).classList.add("btn-disabled")
     } else {
-      if (letrecoRefactor[i] == guessSplited[i]) {
-        const buttonsDisplaced = document.querySelectorAll(".btn-displaced")
-        buttonsDisplaced.forEach(button => {
-          if (button.textContent == guessSplited[i]) {
-            button.classList.remove("btn-displaced")
+      if(letrecoRefactor.includes(guessSplited[i])){
+        if (letrecoRefactor[i] == guessSplited[i]) {
+          const buttonsDisplaced = document.querySelectorAll(".btn-displaced")
+          buttonsDisplaced.forEach(button => {
+            if (button.textContent == guessSplited[i]) {
+              button.classList.remove("btn-displaced")
+            }
+          })
+          currentColumns[i].classList.remove("displaced")
+          currentColumns[i].classList.add("right")
+          if (acentosArray.includes(letrecoSplited[i])) {
+            currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
           }
-        })
-        currentColumns[i].classList.remove("displaced")
-        currentColumns[i].classList.add("right")
-        if (acentosArray.includes(letrecoSplited[i])) {
-          currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
+          document.getElementById(guessSplited[i]).classList.add("btn-right")
+        }else{
+          currentColumns[i].classList.add("displaced")
+          document.getElementById(guessSplited[i]).classList.add("btn-displaced")
+          letrecoRefactor[i] = letrecoRefactor[i].replace(guessSplited[i], "")
         }
-        document.getElementById(guessSplited[i]).classList.add("btn-right")
-      } else if (letrecoRefactor.includes(guessSplited[i])) {
-        currentColumns[i].classList.add("displaced")
-        document.getElementById(guessSplited[i]).classList.add("btn-displaced")
-        letrecoRefactor[i] = letrecoRefactor[i].replace(guessSplited[i], "")
       } else {
         currentColumns[i].classList.add("wrong")
-      }
+      }  
     }
   }
 
@@ -154,17 +159,16 @@ const checkGuess = () => {
     userSummary.totalGuessesCounter++
     sessionStorage.setItem("userSummary", JSON.stringify(userSummary))
 
-    document.getElementById("resultImgToast").setAttribute("src", "./images/right-result.png")
-    document.getElementById("resultTitleToast").textContent = "Incrível!"
-    document.getElementById("resultBodyToast").textContent = "Veja sua pontuação clicando em ☰ ou vá para a póxima palavra"
+    document.getElementById("resultMessageToast").classList.add("right-toast")
+    document.getElementById("resultBodyToast").textContent = "Incrível!"
 
     var resultMessageToast = document.getElementById('resultMessageToast')
-    
+
     if (resultMessageToast) {
       var toast = new bootstrap.Toast(resultMessageToast)
       toast.show()
     }
-    
+
     createSummary()
     return
   } else {
@@ -178,12 +182,11 @@ const checkGuess = () => {
         lastRowColumn.classList.add("wrong-result")
       }
 
-      document.getElementById("resultImgToast").setAttribute("src", "./images/wrong-result.png")
-      document.getElementById("resultTitleToast").textContent = "Errou!"
-      document.getElementById("resultBodyToast").textContent = `A palavra era ${letreco}, veja sua pontuação clicando em ☰ ou vá para a póxima palavra`
-  
+      document.getElementById("resultMessageToast").classList.add("wrong-toast")
+      document.getElementById("resultBodyToast").textContent = `Errou! A palavra era ${letreco}`
+
       var resultMessageToast = document.getElementById('resultMessageToast')
-      
+
       if (resultMessageToast) {
         var toast = new bootstrap.Toast(resultMessageToast)
         toast.show()
@@ -264,7 +267,7 @@ const createKeyboardRow = (keys, keyboardRow) => {
     var buttonElement = document.createElement("button")
     buttonElement.textContent = key
     buttonElement.setAttribute("id", key)
-    if(windowWidth >= 768){
+    if (windowWidth >= 768) {
       buttonElement.style.borderRadius = "0.45rem"
     }
     buttonElement.style.padding = "0"
@@ -308,7 +311,7 @@ const backspaceButton = document.createElement("button")
 backspaceButton.addEventListener("click", handleBackspace)
 backspaceButton.textContent = "⌫"
 backspaceButton.id = "backspaceButton"
-if(windowWidth >= 768){
+if (windowWidth >= 768) {
   backspaceButton.style.borderRadius = "0.45rem"
 }
 backspaceButton.classList.add("btn")
@@ -320,7 +323,7 @@ const enterButton = document.createElement("button")
 enterButton.addEventListener("click", checkGuess)
 enterButton.textContent = windowWidth < 768 ? "⇥" : "ENTER"
 enterButton.id = "enterButton"
-if(windowWidth >= 768){
+if (windowWidth >= 768) {
   enterButton.style.borderRadius = "0.45rem"
 }
 enterButton.classList.add("btn")
@@ -329,9 +332,19 @@ enterButton.classList.add("char")
 keyboardThirdRow.append(enterButton)
 
 
+/* --- CREATE HEADER --- */
 const header = document.querySelector(".header-container")
-let buttonOpenNavBar = document.createElement("button")
-buttonOpenNavBar.textContent = "☰"
+let buttonOpenNavBar = document.createElement("img")
+buttonOpenNavBar.setAttribute("id", "buttonOpenNavBar")
+buttonOpenNavBar.setAttribute("type", "button")
+buttonOpenNavBar.setAttribute("src", "./images/score.png")
+buttonOpenNavBar.addEventListener("mouseenter", function (event) {
+  event.target.setAttribute("src", "./images/score-hover.png")
+}, false)
+
+buttonOpenNavBar.addEventListener("mouseout", function (event) {
+  event.target.setAttribute("src", "./images/score.png")
+}, false)
 buttonOpenNavBar.setAttribute("data-bs-toggle", "offcanvas")
 buttonOpenNavBar.setAttribute("href", "#offcanvasScoreBoard")
 buttonOpenNavBar.setAttribute("role", "button")
@@ -341,17 +354,62 @@ buttonOpenNavBar.classList.add("btn-outline-dark")
 buttonOpenNavBar.classList.add("char")
 header.append(buttonOpenNavBar)
 
+let buttonSettings = document.createElement("img")
+buttonSettings.setAttribute("id", "buttonSettings")
+buttonSettings.setAttribute("type", "button")
+buttonSettings.setAttribute("data-bs-toggle", "modal")
+buttonSettings.setAttribute("data-bs-target", "#settingsModal")
+buttonSettings.setAttribute("src", "./images/settings.png")
+buttonSettings.addEventListener("mouseenter", function (event) {
+  event.target.setAttribute("src", "./images/settings-hover.png")
+}, false)
+
+buttonSettings.addEventListener("mouseout", function (event) {
+  event.target.setAttribute("src", "./images/settings.png")
+}, false)
+buttonSettings.classList.add("btn")
+buttonSettings.classList.add("btn-outline-dark")
+buttonSettings.classList.add("char")
+header.append(buttonSettings)
+
 let title = document.createElement("div")
-title.textContent = "LETRECO"
+title.textContent = "LeGuesser"
 header.append(title)
 
-let buttonNextWord = document.createElement("button")
-buttonNextWord.textContent = "🡢"
+let buttonInformation = document.createElement("img")
+buttonInformation.setAttribute("id", "buttonInformation")
+buttonInformation.setAttribute("type", "button")
+buttonInformation.setAttribute("data-bs-toggle", "modal")
+buttonInformation.setAttribute("data-bs-target", "#infosModal")
+buttonInformation.setAttribute("src", "./images/info.png")
+buttonInformation.addEventListener("mouseenter", function (event) {
+  event.target.setAttribute("src", "./images/info-hover.png")
+}, false)
+buttonInformation.addEventListener("mouseout", function (event) {
+  event.target.setAttribute("src", "./images/info.png")
+}, false)
+buttonInformation.classList.add("btn")
+buttonInformation.classList.add("btn-outline-dark")
+buttonInformation.classList.add("char")
+header.append(buttonInformation)
+
+let buttonNextWord = document.createElement("img")
+buttonNextWord.setAttribute("id", "buttonNextWord")
+buttonNextWord.setAttribute("type", "button")
+buttonNextWord.setAttribute("src", "./images/next.png")
+buttonNextWord.addEventListener("mouseenter", function (event) {
+  event.target.setAttribute("src", "./images/next-hover.png")
+}, false)
+
+buttonNextWord.addEventListener("mouseout", function (event) {
+  event.target.setAttribute("src", "./images/next.png")
+}, false)
+buttonNextWord.addEventListener("click", () => document.location.reload())
 buttonNextWord.classList.add("btn")
 buttonNextWord.classList.add("btn-outline-dark")
 buttonNextWord.classList.add("char")
-
 header.append(buttonNextWord)
+/* --- END HEADER --- */
 
 document.onkeydown = function (evt) {
   evt = evt || window.evt
@@ -362,6 +420,18 @@ document.onkeydown = function (evt) {
   } else if (keysFirstRow.includes(evt.key.toUpperCase()) || keysSecondRow.includes(evt.key.toUpperCase()) || keysThirdRow.includes(evt.key.toUpperCase())) {
     handleKeyboardOnClick(evt.key.toUpperCase())
   }
+}
+
+
+function informationModal() {
+
+  console.log("salve caralho")
+
+  let modal = document.createElement("div")
+  modal.classList.add("modal-dialog")
+  modal.classList.add("modal-dialog-centered")
+  modal.classList.add("modal-dialog-scrollable")
+
 }
 
 function createSummary() {
@@ -404,12 +474,12 @@ function createSummary() {
     td.textContent = trie.numberOfTries
     tr.append(td)
 
-    if(trie.result){
+    if (trie.result) {
       tr.classList.add("table-success")
-    }else{
+    } else {
       tr.classList.add("table-danger")
     }
-    
+
 
     summaryTableBody.append(tr)
   })
@@ -418,19 +488,73 @@ function createSummary() {
 
 }
 
-function sorteiaPalavra() {
+function sortWord() {
   let index = Math.floor(Math.random() * (0 - wordsArray.length)) + 0
   const palavraSort = wordsArray[index < 0 ? index * -1 : index]
   console.log(palavraSort.normalize().toUpperCase())
   return palavraSort.normalize().toUpperCase()
 }
 
-var toastTrigger = document.getElementById('liveToastBtn')
-var toastLiveExample = document.getElementById('liveToast')
-if (toastTrigger) {
-  toastTrigger.addEventListener('click', function () {
-    var toast = new bootstrap.Toast(toastLiveExample)
+function checkVisibilityToast() {
+  let indexShowAgainCheck = document.getElementById("indexShowAgainCheck").checked
+  sessionStorage.setItem("indexShowAgainCheck", indexShowAgainCheck)
+}
 
+if (!indexShowAgainCheckSession) {
+  var toastLiveExample = document.getElementById('indexToast')
+  if (toastLiveExample) {
+    var toast = new bootstrap.Toast(toastLiveExample)
     toast.show()
-  })
+  }
+}
+darkModeToggle(darkModeEnabledSession)
+
+function darkModeToggle(checked) {
+
+  let root = document.querySelector(":root")
+
+  if(checked){
+    root.style.setProperty("--color-background", "#0b0c0e")
+    root.style.setProperty("--color-tile-border", "#b1b1b1")
+    root.style.setProperty("--color-tile-background", "#b3b3b3")
+    root.style.setProperty("--color-text", "#f4f3f1")
+
+    document.getElementById("buttonOpenNavBar").classList.add("inverted")
+    document.getElementById("buttonSettings").classList.add("inverted")
+    document.getElementById("buttonInformation").classList.add("inverted")
+    document.getElementById("buttonNextWord").classList.add("inverted")
+    
+    let buttonKeyboard = document.querySelectorAll(".keyboard-container button")
+    buttonKeyboard.forEach(button => {
+      button.classList.add("btn-text-color")
+    })
+  }else{
+    root.style.setProperty("--color-background", "#f4f3f1")
+    root.style.setProperty("--color-tile-border", "#4e4e4e")
+    root.style.setProperty("--color-tile-background", "#4c4c4c")
+    root.style.setProperty("--color-text", "#0b0c0e")
+
+    document.getElementById("buttonOpenNavBar").classList.remove("inverted")
+    document.getElementById("buttonSettings").classList.remove("inverted")
+    document.getElementById("buttonInformation").classList.remove("inverted")
+    document.getElementById("buttonNextWord").classList.remove("inverted")
+
+    let buttonKeyboard = document.querySelectorAll(".keyboard-container button")
+    buttonKeyboard.forEach(button => {
+      button.classList.remove("btn-text-color")
+    })
+
+  }
+  document.getElementById("darkSwitch").checked = checked
+  sessionStorage.setItem("darkModeEnabled", checked)
+
+}
+
+if(windowWidth < 768){
+  document.getElementById("indexToastContainer").classList.add("top-0")
+  document.getElementById("indexToastContainer").classList.add("start-50")
+  document.getElementById("indexToastContainer").classList.add("translate-middle-x")
+
+  document.getElementById("indexToastContainer").classList.remove("bottom-0")
+  document.getElementById("indexToastContainer").classList.remove("end-0")
 }
