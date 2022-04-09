@@ -51,6 +51,7 @@
 }
 
 .toast {
+    margin-top: 3em;
     width: fit-content;
     height: fit-content;
     font-size: 0.75em;
@@ -69,13 +70,13 @@
     display: grid;
     padding-left: 0.25em;
     padding-right: 0.25em;
-    grid-template-columns: 5vh 5vh 1fr 5vh 5vh;
+    grid-template-columns: 0.5fr 0.75fr 0.5fr;
     justify-content: center;
+    z-index: 50;
 }
 
 .header-container img {
-    width: 100%;
-    height: 65%;
+    width: 40%;
 }
 
 main {
@@ -85,7 +86,7 @@ main {
     padding: 0;
     display: grid;
     margin: 0 auto;
-    margin-top: 3em;
+    margin-top: 6em;
     width: 100vw;
 }
 
@@ -123,6 +124,7 @@ main {
     justify-content: center;
     display: flex;
     border: none;
+    pointer-events: none;
 }
 
 .tile-column:focus {
@@ -141,61 +143,6 @@ main {
     border: 5px solid var(--color-tile-border);
     border-bottom: 8px solid var(--color-tile-border);
     box-sizing: border-box;
-}
-
-.btn-group {
-    display: block;
-}
-
-.keyboard-container {
-    flex-shrink: 0;
-    padding: 2em 0.5em 0.3em 0.5em;
-    margin: 0;
-    display: grid;
-    height: var(--kbd-height);
-    grid-template-rows: repeat(3, 1fr);
-    max-width: 100vw;
-    max-height: var(--kbd-height);
-    flex-direction: column;
-    justify-content: center;
-}
-
-.keyboard-row-container-first {
-    align-items: center;
-    display: flex;
-}
-
-.keyboard-row-container-second {
-    display: flex;
-}
-
-.keyboard-row-container-second button {
-    min-width: 2.0em;
-}
-
-.keyboard-row-container-third {
-    display: flex;
-}
-
-.keyboard-row-container-third button {
-    max-width: 2.0em;
-}
-
-.keyboard-container button {
-    grid-column: span 3;
-    font-size: 1.25em;
-    justify-content: center;
-    align-items: center;
-    font-weight: 500;
-    width: 2.0em;
-    height: 2.0em;
-}
-
-#backspaceButton {
-}
-
-#enterButton {
-    min-width: max-content;
 }
 
 .status-right {

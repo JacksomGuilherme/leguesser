@@ -19,7 +19,6 @@ body {
     font-family: 'Mitr', sans-serif;
     min-width: 100vw;
     min-height: 100vh;
-    border: 2px solid var(--color-disabled); /* TODO: REMOVER ESSA PORRA DEPOIS */
     background-color: var(--color-background);
 }
 

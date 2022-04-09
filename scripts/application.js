@@ -104,11 +104,8 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
 function setSelected(element) {
   let clickedLine = element.split("w")[1].split("c")[0]
   let clickedColumn = element.split("n")[1]
-  let idRow = currentRow == 5 ? "last-row" : "row"
   if (currentRow == clickedLine) {
-    for (i = 0; i < 5; i++) {
-      document.getElementById(`${idRow}${currentRow}column${i}`).classList.remove("typing-selected")
-    }
+    document.querySelector(".typing-selected").classList.remove("typing-selected")
     document.getElementById(element).classList.add("typing-selected")
     currentColumn = parseInt(clickedColumn, 8)
     userSelectedColumn = true
@@ -124,11 +121,10 @@ const checkGuess = () => {
   }
   var currentColumns = document.querySelectorAll(".typing")
   let letrecoRefactor = letreco.normalize('NFD').replace(/[\u0300-\u036f]/g, "").split("")
-  let letrecoAux = letreco.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
   for (i = 0; i < 5; i++) {
     if (!letrecoRefactor.includes(guessSplited[i])) {
       currentColumns[i].classList.add("wrong")
-      document.getElementById(guessSplited[i]).classList.add("btn-disabled")
+      setKeyboardButtonColor(guessSplited[i], "W")
     } else {
       if (letrecoRefactor.includes(guessSplited[i])) {
         if (letrecoRefactor[i] == guessSplited[i]) {
@@ -143,10 +139,10 @@ const checkGuess = () => {
           if (acentosArray.includes(letrecoSplited[i])) {
             currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
           }
-          document.getElementById(guessSplited[i]).classList.add("btn-right")
+          setKeyboardButtonColor(guessSplited[i], "R")
         } else {
           currentColumns[i].classList.add("displaced")
-          document.getElementById(guessSplited[i]).classList.add("btn-displaced")
+          setKeyboardButtonColor(guessSplited[i], "D")
           letrecoRefactor[i] = letrecoRefactor[i].replace(guessSplited[i], "")
         }
       } else {
@@ -209,6 +205,12 @@ const checkGuess = () => {
   }
 }
 
+function setKeyboardButtonColor(key, result){
+  if(windowWidth >= 600){
+    document.getElementById(key).classList.add(result == "R" ? "btn-right" : result == "D" ? "btn-displaced" : "btn-wrong")
+  }
+}
+
 const moveToNextRow = () => {
   var typingColumns = document.querySelectorAll(".typing")
   for (let index = 0; index < typingColumns.length; index++) {
@@ -235,7 +237,9 @@ const moveToHiddenRow = () => {
   var currentColumns = currentRowEl.querySelectorAll(".tile-column")
   for (let index = 0; index < currentColumns.length; index++) {
     typingColumns[index].classList.remove("typing")
-    typingColumns[index].classList.add("disabled")
+    if (windowWidth < 600){
+      typingColumns[index].blur()
+    }
   }
   currentRow = 7
 }
@@ -357,6 +361,10 @@ if(windowWidth > 600){
 
 /* --- CREATE HEADER --- */
 const header = document.querySelector(".header-container")
+let buttonGroupFirstColumn = document.createElement("div")
+buttonGroupFirstColumn.classList.add("btn-group")
+buttonGroupFirstColumn.setAttribute("role", "group")
+
 let buttonOpenNavBar = document.createElement("img")
 buttonOpenNavBar.setAttribute("id", "buttonOpenNavBar")
 buttonOpenNavBar.setAttribute("type", "button")
@@ -374,7 +382,8 @@ buttonOpenNavBar.setAttribute("role", "button")
 buttonOpenNavBar.setAttribute("aria-controls", "offcanvasScoreBoard")
 buttonOpenNavBar.classList.add("btn")
 buttonOpenNavBar.classList.add("btn-outline-dark")
-header.append(buttonOpenNavBar)
+buttonGroupFirstColumn.append(buttonOpenNavBar)
+
 
 let buttonSettings = document.createElement("img")
 buttonSettings.setAttribute("id", "buttonSettings")
@@ -391,11 +400,17 @@ buttonSettings.addEventListener("mouseout", function (event) {
 }, false)
 buttonSettings.classList.add("btn")
 buttonSettings.classList.add("btn-outline-dark")
-header.append(buttonSettings)
+buttonGroupFirstColumn.append(buttonSettings)
+
+header.append(buttonGroupFirstColumn)
 
 let title = document.createElement(windowWidth <= 300 ? "h2" : "h1")
 title.textContent = "LeGuesser"
 header.append(title)
+
+let buttonGroupThirdColumn = document.createElement("div")
+buttonGroupThirdColumn.classList.add("btn-group")
+buttonGroupThirdColumn.setAttribute("role", "group")
 
 let buttonInformation = document.createElement("img")
 buttonInformation.setAttribute("id", "buttonInformation")
@@ -411,7 +426,7 @@ buttonInformation.addEventListener("mouseout", function (event) {
 }, false)
 buttonInformation.classList.add("btn")
 buttonInformation.classList.add("btn-outline-dark")
-header.append(buttonInformation)
+buttonGroupThirdColumn.append(buttonInformation)
 
 let buttonNextWord = document.createElement("img")
 buttonNextWord.setAttribute("id", "buttonNextWord")
@@ -427,7 +442,8 @@ buttonNextWord.addEventListener("mouseout", function (event) {
 buttonNextWord.addEventListener("click", () => document.location.reload())
 buttonNextWord.classList.add("btn")
 buttonNextWord.classList.add("btn-outline-dark")
-header.append(buttonNextWord)
+buttonGroupThirdColumn.append(buttonNextWord)
+header.append(buttonGroupThirdColumn)
 /* --- END HEADER --- */
 
 document.onkeydown = function (evt) {
