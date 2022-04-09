@@ -1,3 +1,8 @@
+body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 .modal-body .tile-column {
     height: 1.9em;
     width: 1.85em;
@@ -171,7 +176,7 @@ main {
 
 .keyboard-container button {
     grid-column: span 3;
-    font-size: min(3rem, calc(var(--kbd-height) / 7));
+    font-size: min(2rem, calc(var(--kbd-height) / 9));
     margin: 0.10em;
     justify-content: center;
     align-items: center;

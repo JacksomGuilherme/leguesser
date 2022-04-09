@@ -92,6 +92,7 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
 
     if (windowWidth < 600) {
       tileColumn.setAttribute("maxlength", 1)
+      tileColumn.setAttribute("type", "text")
     }
 
     tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
@@ -99,6 +100,10 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     guesses[rowIndex][columnIndex] = ""
   }
   tiles.append(tileRow)
+}
+
+if (windowWidth < 600) {
+  document.getElementById("row0column0").focus()
 }
 
 function setSelected(element) {
