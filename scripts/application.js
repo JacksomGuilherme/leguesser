@@ -73,8 +73,8 @@ for (let index = 0; index < letreco.length; index++) {
 }
 const guesses = []
 
-function handleMobileKeyboard(element) {
-  let tileContent = document.getElementById(element).textContent
+function handleMobileKeyboard() {
+  let tileContent = document.querySelector(".typing-selected").textContent
 
   if(tileContent == ""){
     handleBackspace()
@@ -104,7 +104,7 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     if (windowWidth < 600) {
       tileColumn.setAttribute("maxlength", 1)
       tileColumn.setAttribute("type", "text")
-      tileColumn.addEventListener("input", () => handleMobileKeyboard(window.event.target.id))
+      tileColumn.addEventListener("keyup", () => handleMobileKeyboard())
     }
 
     tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
