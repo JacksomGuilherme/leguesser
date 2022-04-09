@@ -73,6 +73,17 @@ for (let index = 0; index < letreco.length; index++) {
 }
 const guesses = []
 
+function handleMobileKeyboard(element) {
+  let tileContent = document.getElementById(element).textContent
+
+  if(tileContent == ""){
+    handleBackspace()
+  }else{
+    handleKeyboardOnClick(tileContent)
+  }
+
+}
+
 for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
   guesses[rowIndex] = new Array(columns)
   const tileRow = document.createElement("div")
@@ -93,6 +104,7 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     if (windowWidth < 600) {
       tileColumn.setAttribute("maxlength", 1)
       tileColumn.setAttribute("type", "text")
+      tileColumn.addEventListener("input", () => handleMobileKeyboard(window.event.target.id))
     }
 
     tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
@@ -210,8 +222,8 @@ const checkGuess = () => {
   }
 }
 
-function setKeyboardButtonColor(key, result){
-  if(windowWidth >= 600){
+function setKeyboardButtonColor(key, result) {
+  if (windowWidth >= 600) {
     document.getElementById(key).classList.add(result == "R" ? "btn-right" : result == "D" ? "btn-displaced" : "btn-wrong")
   }
 }
@@ -242,7 +254,7 @@ const moveToHiddenRow = () => {
   var currentColumns = currentRowEl.querySelectorAll(".tile-column")
   for (let index = 0; index < currentColumns.length; index++) {
     typingColumns[index].classList.remove("typing")
-    if (windowWidth < 600){
+    if (windowWidth < 600) {
       typingColumns[index].blur()
     }
   }
@@ -266,9 +278,9 @@ const handleKeyboardOnClick = (key) => {
 
   currentTile.textContent = key
 
-  if(windowWidth < 600){
+  if (windowWidth < 600) {
     let input = document.getElementById(`${idRow}${currentRow}column${currentColumn}`)
-    if(input.textContent.length == 1 && currentColumn <= 4){
+    if (input.textContent.length == 1 && currentColumn <= 4) {
       document.getElementById(`${idRow}${currentRow}column${currentColumn}`).focus()
     }
   }
@@ -316,9 +328,9 @@ const handleBackspace = () => {
   guesses[currentRow][currentColumn] = ""
   const tile = document.querySelector("#" + idRow + currentRow + "column" + currentColumn)
 
-  if(windowWidth < 600){
+  if (windowWidth < 600) {
     let input = document.getElementById(`${idRow}${currentRow}column${currentColumn}`)
-    if(input.textContent.length == 1 && currentColumn >= 0){
+    if (input.textContent.length == 1 && currentColumn >= 0) {
       document.getElementById(`${idRow}${currentRow}column${currentColumn}`).focus()
     }
   }
@@ -332,7 +344,7 @@ const handleBackspace = () => {
   userSelectedColumn = false
 }
 
-if(windowWidth > 600){
+if (windowWidth > 600) {
   createKeyboardRow(keysFirstRow, keyboardFirstRow)
   createKeyboardRow(keysSecondRow, keyboardSecondRow)
   createKeyboardRow(keysThirdRow, keyboardThirdRow)
@@ -349,7 +361,7 @@ if(windowWidth > 600){
   backspaceButton.classList.add("btn")
   backspaceButton.classList.add("btn-outline-dark")
   keyboardSecondRow.append(backspaceButton)
-  
+
   const enterButton = document.createElement("button")
   enterButton.addEventListener("click", checkGuess)
   enterButton.textContent = windowWidth < 768 ? "⇥" : "ENTER"
