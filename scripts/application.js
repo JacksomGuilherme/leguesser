@@ -79,7 +79,7 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
   tileRow.setAttribute("id", "row" + rowIndex)
   tileRow.setAttribute("class", "tile-row")
   for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
-    const tileColumn = document.createElement("div")
+    const tileColumn = windowWidth < 600 ? document.createElement("input") : document.createElement("div")
     if (rowIndex == 5) {
       tileColumn.setAttribute("id", "last-row" + rowIndex + "column" + columnIndex)
     } else {
@@ -89,6 +89,10 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
       "class",
       rowIndex === 0 ? "tile-column typing" : "tile-column"
     )
+
+    if (windowWidth < 600) {
+      tileColumn.setAttribute("maxlength", 1)
+    }
 
     tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
     tileRow.append(tileColumn)
@@ -126,7 +130,7 @@ const checkGuess = () => {
       currentColumns[i].classList.add("wrong")
       document.getElementById(guessSplited[i]).classList.add("btn-disabled")
     } else {
-      if(letrecoRefactor.includes(guessSplited[i])){
+      if (letrecoRefactor.includes(guessSplited[i])) {
         if (letrecoRefactor[i] == guessSplited[i]) {
           const buttonsDisplaced = document.querySelectorAll(".btn-displaced")
           buttonsDisplaced.forEach(button => {
@@ -140,14 +144,14 @@ const checkGuess = () => {
             currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
           }
           document.getElementById(guessSplited[i]).classList.add("btn-right")
-        }else{
+        } else {
           currentColumns[i].classList.add("displaced")
           document.getElementById(guessSplited[i]).classList.add("btn-displaced")
           letrecoRefactor[i] = letrecoRefactor[i].replace(guessSplited[i], "")
         }
       } else {
         currentColumns[i].classList.add("wrong")
-      }  
+      }
     }
   }
 
@@ -252,8 +256,17 @@ const handleKeyboardOnClick = (key) => {
   )
 
   currentTile.textContent = key
+
+  if(windowWidth < 600){
+    let input = document.getElementById(`${idRow}${currentRow}column${currentColumn}`)
+    if(input.textContent.length == 1 && currentColumn <= 4){
+      document.getElementById(`${idRow}${currentRow}column${currentColumn}`).focus()
+    }
+  }
+
   guesses[currentRow][currentColumn] = key
   currentColumn++
+
 
 
   if (currentColumn <= 4) {
@@ -279,9 +292,7 @@ const createKeyboardRow = (keys, keyboardRow) => {
   })
 }
 
-createKeyboardRow(keysFirstRow, keyboardFirstRow)
-createKeyboardRow(keysSecondRow, keyboardSecondRow)
-createKeyboardRow(keysThirdRow, keyboardThirdRow)
+
 createSummary()
 
 
@@ -295,8 +306,15 @@ const handleBackspace = () => {
   currentColumn--
   guesses[currentRow][currentColumn] = ""
   const tile = document.querySelector("#" + idRow + currentRow + "column" + currentColumn)
-  tile.textContent = ""
 
+  if(windowWidth < 600){
+    let input = document.getElementById(`${idRow}${currentRow}column${currentColumn}`)
+    if(input.textContent.length == 1 && currentColumn >= 0){
+      document.getElementById(`${idRow}${currentRow}column${currentColumn}`).focus()
+    }
+  }
+
+  tile.textContent = ""
 
   if (currentColumn >= 0) {
     document.querySelector(".typing-selected").classList.remove("typing-selected")
@@ -305,29 +323,36 @@ const handleBackspace = () => {
   userSelectedColumn = false
 }
 
-const keyboardContainer = document.querySelector(".keyboard-container")
+if(windowWidth > 600){
+  createKeyboardRow(keysFirstRow, keyboardFirstRow)
+  createKeyboardRow(keysSecondRow, keyboardSecondRow)
+  createKeyboardRow(keysThirdRow, keyboardThirdRow)
 
-const backspaceButton = document.createElement("button")
-backspaceButton.addEventListener("click", handleBackspace)
-backspaceButton.textContent = "⌫"
-backspaceButton.id = "backspaceButton"
-if (windowWidth >= 768) {
-  backspaceButton.style.borderRadius = "0.45rem"
-}
-backspaceButton.classList.add("btn")
-backspaceButton.classList.add("btn-outline-dark")
-keyboardSecondRow.append(backspaceButton)
+  const keyboardContainer = document.querySelector(".keyboard-container")
 
-const enterButton = document.createElement("button")
-enterButton.addEventListener("click", checkGuess)
-enterButton.textContent = windowWidth < 768 ? "⇥" : "ENTER"
-enterButton.id = "enterButton"
-if (windowWidth >= 768) {
-  enterButton.style.borderRadius = "0.45rem"
+  const backspaceButton = document.createElement("button")
+  backspaceButton.addEventListener("click", handleBackspace)
+  backspaceButton.textContent = "⌫"
+  backspaceButton.id = "backspaceButton"
+  if (windowWidth >= 768) {
+    backspaceButton.style.borderRadius = "0.45rem"
+  }
+  backspaceButton.classList.add("btn")
+  backspaceButton.classList.add("btn-outline-dark")
+  keyboardSecondRow.append(backspaceButton)
+  
+  const enterButton = document.createElement("button")
+  enterButton.addEventListener("click", checkGuess)
+  enterButton.textContent = windowWidth < 768 ? "⇥" : "ENTER"
+  enterButton.id = "enterButton"
+  if (windowWidth >= 768) {
+    enterButton.style.borderRadius = "0.45rem"
+  }
+  enterButton.classList.add("btn")
+  enterButton.classList.add("btn-outline-dark")
+  keyboardThirdRow.append(enterButton)
+
 }
-enterButton.classList.add("btn")
-enterButton.classList.add("btn-outline-dark")
-keyboardThirdRow.append(enterButton)
 
 
 /* --- CREATE HEADER --- */
@@ -507,7 +532,7 @@ function darkModeToggle(checked) {
 
   let root = document.querySelector(":root")
 
-  if(checked){
+  if (checked) {
     root.style.setProperty("--color-background", "#0b0c0e")
     root.style.setProperty("--color-tile-border", "#b1b1b1")
     root.style.setProperty("--color-tile-background", "#b3b3b3")
@@ -517,12 +542,12 @@ function darkModeToggle(checked) {
     document.getElementById("buttonSettings").classList.add("inverted")
     document.getElementById("buttonInformation").classList.add("inverted")
     document.getElementById("buttonNextWord").classList.add("inverted")
-    
+
     let buttonKeyboard = document.querySelectorAll(".keyboard-container button")
     buttonKeyboard.forEach(button => {
       button.classList.add("btn-text-color")
     })
-  }else{
+  } else {
     root.style.setProperty("--color-background", "#f4f3f1")
     root.style.setProperty("--color-tile-border", "#4e4e4e")
     root.style.setProperty("--color-tile-background", "#4c4c4c")
@@ -544,7 +569,7 @@ function darkModeToggle(checked) {
 
 }
 
-if(windowWidth < 768){
+if (windowWidth < 768) {
   document.getElementById("indexToastContainer").classList.add("top-0")
   document.getElementById("indexToastContainer").classList.remove("end-0")
 }
