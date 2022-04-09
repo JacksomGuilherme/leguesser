@@ -1,0 +1,276 @@
+:root {
+    --color-right: #3aa394;
+    --color-displaced: #d3ad69;
+    --color-disabled: #303030;
+    --color-wrong: #312a2c;
+    --color-background: #f4f3f1;
+    --color-tile-background: #4c4c4c;
+    --color-tile-border: #4e4e4e;
+    --color-wrong-result: #ab2218;
+    --color-content: #f4f3f1;
+    --color-text: #0b0c0e;
+    --inset: env(safe-area-inset-top);
+    --kbd-height: min(100em/2.15, 25vh);
+    --board-width: min(80em, (100vh - var(--inset) - var(--kbd-height) - 12vh - 6vh) * 5/6);
+    --board-gap: 0.125em;
+}
+
+body {
+    font-family: 'Mitr', sans-serif;
+    min-width: 100vw;
+    min-height: 100vh;
+    border: 2px solid var(--color-disabled); /* TODO: REMOVER ESSA PORRA DEPOIS */
+    background-color: var(--color-background);
+}
+
+.modal-body .tile-column {
+    background-color: var(--color-tile-background);
+}
+
+.modal-body .typing {
+    background-color: var(--color-background);
+    cursor: default;
+}
+
+.modal-body .right {
+    background-color: var(--color-right);
+    color: var(--color-content);
+    -webkit-animation-name: none;
+}
+
+.modal-body .displaced {
+    background-color: var(--color-displaced);
+    color: var(--color-content);
+    -webkit-animation-name: none;
+}
+
+.modal-body .wrong {
+    background-color: var(--color-wrong);
+    color: var(--color-content);
+    -webkit-animation-name: none;
+}
+
+.right-toast {
+    background-color: var(--color-right);
+}
+
+.wrong-toast {
+    background-color: var(--color-wrong-result);
+}
+
+.header-container {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    z-index: 5;
+}
+
+.inverted {
+    filter: invert(100%);
+}
+
+.tile-column {
+    background-color: var(--color-tile-background);
+}
+
+.typing {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.typing-selected {
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+
+.keyboard-container {
+    user-select: none;
+    grid-template-rows: repeat(3, 1fr);
+    border-color: var(--color-text);
+}
+
+.keyboard-container .btn-text-color {
+    color: var(--color-text);
+}
+
+.keyboard-container button {
+    touch-action: manipulation;
+    outline: none;
+    cursor: pointer;
+}
+
+.right {
+    -webkit-animation-name: guess-right;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    background-color: var(--color-right);
+    color: var(--color-content);
+}
+
+@-webkit-keyframes guess-right {
+    from {
+        background-color: var(--color-background);
+        color: var(--color-content);
+    }
+
+    to {
+        background-color: var(--color-right);
+        color: var(--color-content);
+    }
+
+}
+
+.wrong {
+    -webkit-animation-name: guess-wrong;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    background-color: var(--color-wrong);
+    color: var(--color-content);
+}
+
+@-webkit-keyframes guess-wrong {
+    from {
+        background-color: var(--color-background);
+        color: var(--color-content);
+    }
+
+    to {
+        background-color: var(--color-wrong);
+        color: var(--color-content);
+    }
+
+}
+
+.wrong-result {
+    -webkit-animation-name: wrong-result;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    background-color: var(--color-wrong-result);
+    color: var(--color-content);
+}
+
+@-webkit-keyframes wrong-result {
+    from {
+        background-color: var(--color-background);
+        color: var(--color-content);
+    }
+
+    to {
+        background-color: var(--color-wrong-result);
+        color: var(--color-content);
+    }
+
+}
+
+.displaced {
+    -webkit-animation-name: guess-displaced;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    background-color: var(--color-displaced);
+    color: var(--color-content);
+}
+
+@-webkit-keyframes guess-displaced {
+    from {
+        background-color: var(--color-background);
+        color: var(--color-content);
+    }
+
+    to {
+        background-color: var(--color-displaced);
+        color: var(--color-content);
+    }
+
+}
+
+.btn-right {
+    -webkit-animation-name: btn-right;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    background-color: var(--color-right);
+    color: var(--color-content);
+}
+
+@-webkit-keyframes btn-right {
+    from {
+        background-color: var(--color-tile-border);
+        color: var(--color-content);
+    }
+
+    to {
+        background-color: var(--color-right);
+        color: var(--color-content);
+    }
+
+}
+
+.btn-displaced {
+    -webkit-animation-name: btn-displaced;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    background-color: var(--color-displaced);
+    color: var(--color-content);
+}
+
+@-webkit-keyframes btn-displaced {
+    from {
+        background-color: var(--color-tile-border);
+        color: var(--color-content);
+    }
+
+    to {
+        background-color: var(--color-displaced);
+        color: var(--color-content);
+    }
+
+}
+
+.btn-disabled {
+    -webkit-animation-name: btn-disabled;
+    -webkit-animation-duration: 0.75s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    background-color: var(--color-disabled);
+    color: var(--color-content);
+}
+
+@-webkit-keyframes btn-disabled {
+    from {
+        background-color: var(--color-content);
+        color: var(--color-content);
+    }
+
+    to {
+        background-color: var(--color-disabled);
+        color: var(--color-content);
+    }
+
+}
+
+.status-right {
+    background-color: #c8e6c9;
+    color: #388e3c;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.status-wrong {
+    background-color: #ffcdd2;
+    color: #c62828;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.score-board-header {
+    display: flex;
+    flex-direction: column;
+}

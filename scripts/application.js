@@ -316,7 +316,6 @@ if (windowWidth >= 768) {
 }
 backspaceButton.classList.add("btn")
 backspaceButton.classList.add("btn-outline-dark")
-backspaceButton.classList.add("char")
 keyboardSecondRow.append(backspaceButton)
 
 const enterButton = document.createElement("button")
@@ -328,7 +327,6 @@ if (windowWidth >= 768) {
 }
 enterButton.classList.add("btn")
 enterButton.classList.add("btn-outline-dark")
-enterButton.classList.add("char")
 keyboardThirdRow.append(enterButton)
 
 
@@ -351,7 +349,6 @@ buttonOpenNavBar.setAttribute("role", "button")
 buttonOpenNavBar.setAttribute("aria-controls", "offcanvasScoreBoard")
 buttonOpenNavBar.classList.add("btn")
 buttonOpenNavBar.classList.add("btn-outline-dark")
-buttonOpenNavBar.classList.add("char")
 header.append(buttonOpenNavBar)
 
 let buttonSettings = document.createElement("img")
@@ -369,10 +366,9 @@ buttonSettings.addEventListener("mouseout", function (event) {
 }, false)
 buttonSettings.classList.add("btn")
 buttonSettings.classList.add("btn-outline-dark")
-buttonSettings.classList.add("char")
 header.append(buttonSettings)
 
-let title = document.createElement("div")
+let title = document.createElement(windowWidth <= 300 ? "h2" : "h1")
 title.textContent = "LeGuesser"
 header.append(title)
 
@@ -390,7 +386,6 @@ buttonInformation.addEventListener("mouseout", function (event) {
 }, false)
 buttonInformation.classList.add("btn")
 buttonInformation.classList.add("btn-outline-dark")
-buttonInformation.classList.add("char")
 header.append(buttonInformation)
 
 let buttonNextWord = document.createElement("img")
@@ -407,7 +402,6 @@ buttonNextWord.addEventListener("mouseout", function (event) {
 buttonNextWord.addEventListener("click", () => document.location.reload())
 buttonNextWord.classList.add("btn")
 buttonNextWord.classList.add("btn-outline-dark")
-buttonNextWord.classList.add("char")
 header.append(buttonNextWord)
 /* --- END HEADER --- */
 
@@ -552,9 +546,5 @@ function darkModeToggle(checked) {
 
 if(windowWidth < 768){
   document.getElementById("indexToastContainer").classList.add("top-0")
-  document.getElementById("indexToastContainer").classList.add("start-50")
-  document.getElementById("indexToastContainer").classList.add("translate-middle-x")
-
-  document.getElementById("indexToastContainer").classList.remove("bottom-0")
   document.getElementById("indexToastContainer").classList.remove("end-0")
 }
