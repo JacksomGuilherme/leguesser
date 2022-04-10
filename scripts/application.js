@@ -73,8 +73,15 @@ for (let index = 0; index < letreco.length; index++) {
 }
 const guesses = []
 
-function handleMobileKeyboard() {
-  let tileContent = document.querySelector(".typing-selected").textContent
+function handleMobileKeyboard(keyCode) {
+  let inputKeyFilled = window.event.target.value
+  if(keysFirstRow.includes(inputKeyFilled) ||
+      keysSecondRow.includes(inputKeyFilled) || 
+      keysThirdRow.includes(inputKeyFilled)){
+    handleKeyboardOnClick(inputKeyFilled)
+  }else if (keyCode === 13){
+    checkGuess()
+  }
 }
 
 for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -97,7 +104,12 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     if (windowWidth < 600) {
       tileColumn.setAttribute("maxlength", 1)
       tileColumn.setAttribute("type", "text")
-      tileColumn.addEventListener("keydown", () => alert(window.event.keyCode))
+      tileColumn.addEventListener("keyup", function(e) {
+        e = e || window.event;
+        var keyCode = e.which || e.keyCode;
+      
+        handleMobileKeyboard(keyCode)
+      });
     }
 
     tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
