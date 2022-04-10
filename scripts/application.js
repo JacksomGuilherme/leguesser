@@ -73,24 +73,13 @@ for (let index = 0; index < letreco.length; index++) {
 }
 const guesses = []
 
-function handleMobileKeyboard(keyCode) {
-  let inputKeyFilled = window.event.target.value
-  if(keysFirstRow.includes(inputKeyFilled) ||
-      keysSecondRow.includes(inputKeyFilled) || 
-      keysThirdRow.includes(inputKeyFilled)){
-    handleKeyboardOnClick(inputKeyFilled)
-  }else if (keyCode === 13){
-    checkGuess()
-  }
-}
-
 for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
   guesses[rowIndex] = new Array(columns)
   const tileRow = document.createElement("div")
   tileRow.setAttribute("id", "row" + rowIndex)
   tileRow.setAttribute("class", "tile-row")
   for (let columnIndex = 0; columnIndex < columns; columnIndex++) {
-    const tileColumn = windowWidth < 600 ? document.createElement("input") : document.createElement("div")
+    const tileColumn = document.createElement("div")
     if (rowIndex == 5) {
       tileColumn.setAttribute("id", "last-row" + rowIndex + "column" + columnIndex)
     } else {
@@ -101,26 +90,11 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
       rowIndex === 0 ? "tile-column typing" : "tile-column"
     )
 
-    if (windowWidth < 600) {
-      tileColumn.setAttribute("maxlength", 1)
-      tileColumn.setAttribute("type", "text")
-      tileColumn.addEventListener("keyup", function(e) {
-        e = e || window.event;
-        var keyCode = e.which || e.keyCode;
-      
-        handleMobileKeyboard(keyCode)
-      });
-    }
-
     tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
     tileRow.append(tileColumn)
     guesses[rowIndex][columnIndex] = ""
   }
   tiles.append(tileRow)
-}
-
-if (windowWidth < 600) {
-  document.getElementById("row1column1").focus()
 }
 
 function setSelected(element) {
@@ -228,9 +202,7 @@ const checkGuess = () => {
 }
 
 function setKeyboardButtonColor(key, result) {
-  if (windowWidth >= 600) {
-    document.getElementById(key).classList.add(result == "R" ? "btn-right" : result == "D" ? "btn-displaced" : "btn-wrong")
-  }
+  document.getElementById(key).classList.add(result == "R" ? "btn-right" : result == "D" ? "btn-displaced" : "btn-wrong")
 }
 
 const moveToNextRow = () => {
@@ -259,9 +231,6 @@ const moveToHiddenRow = () => {
   var currentColumns = currentRowEl.querySelectorAll(".tile-column")
   for (let index = 0; index < currentColumns.length; index++) {
     typingColumns[index].classList.remove("typing")
-    if (windowWidth < 600) {
-      typingColumns[index].blur()
-    }
   }
   currentRow = 7
 }
@@ -282,13 +251,6 @@ const handleKeyboardOnClick = (key) => {
   )
 
   currentTile.textContent = key
-
-  if (windowWidth < 600) {
-    let input = document.getElementById(`${idRow}${currentRow}column${currentColumn}`)
-    if (input.textContent.length == 1 && currentColumn <= 4) {
-      document.getElementById(`${idRow}${currentRow}column${currentColumn}`).focus()
-    }
-  }
 
   guesses[currentRow][currentColumn] = key
   currentColumn++
@@ -333,13 +295,6 @@ const handleBackspace = () => {
   guesses[currentRow][currentColumn] = ""
   const tile = document.querySelector("#" + idRow + currentRow + "column" + currentColumn)
 
-  if (windowWidth < 600) {
-    let input = document.getElementById(`${idRow}${currentRow}column${currentColumn}`)
-    if (input.textContent.length == 1 && currentColumn >= 0) {
-      document.getElementById(`${idRow}${currentRow}column${currentColumn}`).focus()
-    }
-  }
-
   tile.textContent = ""
 
   if (currentColumn >= 0) {
@@ -350,35 +305,37 @@ const handleBackspace = () => {
 }
 
 if (windowWidth > 600) {
-  createKeyboardRow(keysFirstRow, keyboardFirstRow)
-  createKeyboardRow(keysSecondRow, keyboardSecondRow)
-  createKeyboardRow(keysThirdRow, keyboardThirdRow)
 
-  const keyboardContainer = document.querySelector(".keyboard-container")
-
-  const backspaceButton = document.createElement("button")
-  backspaceButton.addEventListener("click", handleBackspace)
-  backspaceButton.textContent = "⌫"
-  backspaceButton.id = "backspaceButton"
-  if (windowWidth >= 768) {
-    backspaceButton.style.borderRadius = "0.45rem"
-  }
-  backspaceButton.classList.add("btn")
-  backspaceButton.classList.add("btn-outline-dark")
-  keyboardSecondRow.append(backspaceButton)
-
-  const enterButton = document.createElement("button")
-  enterButton.addEventListener("click", checkGuess)
-  enterButton.textContent = windowWidth < 768 ? "⇥" : "ENTER"
-  enterButton.id = "enterButton"
-  if (windowWidth >= 768) {
-    enterButton.style.borderRadius = "0.45rem"
-  }
-  enterButton.classList.add("btn")
-  enterButton.classList.add("btn-outline-dark")
-  keyboardThirdRow.append(enterButton)
 
 }
+
+createKeyboardRow(keysFirstRow, keyboardFirstRow)
+createKeyboardRow(keysSecondRow, keyboardSecondRow)
+createKeyboardRow(keysThirdRow, keyboardThirdRow)
+
+const keyboardContainer = document.querySelector(".keyboard-container")
+
+const backspaceButton = document.createElement("button")
+backspaceButton.addEventListener("click", handleBackspace)
+backspaceButton.textContent = "⌫"
+backspaceButton.id = "backspaceButton"
+if (windowWidth >= 768) {
+  backspaceButton.style.borderRadius = "0.45rem"
+}
+backspaceButton.classList.add("btn")
+backspaceButton.classList.add("btn-outline-dark")
+keyboardSecondRow.append(backspaceButton)
+
+const enterButton = document.createElement("button")
+enterButton.addEventListener("click", checkGuess)
+enterButton.textContent = windowWidth < 768 ? "⇥" : "ENTER"
+enterButton.id = "enterButton"
+if (windowWidth >= 768) {
+  enterButton.style.borderRadius = "0.45rem"
+}
+enterButton.classList.add("btn")
+enterButton.classList.add("btn-outline-dark")
+keyboardThirdRow.append(enterButton)
 
 
 /* --- CREATE HEADER --- */
@@ -563,7 +520,18 @@ if (!indexShowAgainCheckSession) {
     var toast = new bootstrap.Toast(toastLiveExample)
     toast.show()
   }
+}else{
+  changeToastZIndex()
 }
+
+setTimeout(()=>{
+  changeToastZIndex()
+},10000)
+
+function changeToastZIndex(){
+  document.getElementById('indexToastContainer').style.zIndex = "-100"
+}
+
 darkModeToggle(darkModeEnabledSession)
 
 function darkModeToggle(checked) {
