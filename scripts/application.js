@@ -75,13 +75,6 @@ const guesses = []
 
 function handleMobileKeyboard() {
   let tileContent = document.querySelector(".typing-selected").textContent
-
-  if(tileContent == ""){
-    handleBackspace()
-  }else{
-    handleKeyboardOnClick(tileContent)
-  }
-
 }
 
 for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -104,7 +97,7 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     if (windowWidth < 600) {
       tileColumn.setAttribute("maxlength", 1)
       tileColumn.setAttribute("type", "text")
-      tileColumn.addEventListener("keyup", () => handleMobileKeyboard())
+      tileColumn.addEventListener("keydown", () => alert(window.event.keyCode))
     }
 
     tileColumn.addEventListener("click", () => setSelected(window.event.target.id))
@@ -115,7 +108,7 @@ for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
 }
 
 if (windowWidth < 600) {
-  document.getElementById("row0column0").focus()
+  document.getElementById("row1column1").focus()
 }
 
 function setSelected(element) {
