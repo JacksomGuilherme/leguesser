@@ -108,7 +108,6 @@ function setSelected(element) {
   }
 }
 const checkGuess = () => {
-  console.log(userSummary)
   const guess = guesses[currentRow].join("")
   const letrecoSplited = letreco.split("")
   const guessSplited = guess.split("")
@@ -120,7 +119,7 @@ const checkGuess = () => {
   for (i = 0; i < 5; i++) {
     if (!letrecoRefactor.includes(guessSplited[i])) {
       currentColumns[i].classList.add("wrong")
-      setKeyboardButtonColor(guessSplited[i], "W")
+      document.getElementById(guessSplited[i]).classList.add("btn-disabled")
     } else {
       if (letrecoRefactor.includes(guessSplited[i])) {
         if (letrecoRefactor[i] == guessSplited[i]) {
@@ -135,11 +134,10 @@ const checkGuess = () => {
           if (acentosArray.includes(letrecoSplited[i])) {
             currentColumns[i].textContent = acentosArray[acentosArray.indexOf(letrecoSplited[i])]
           }
-          setKeyboardButtonColor(guessSplited[i], "R")
+          document.getElementById(guessSplited[i]).classList.add("btn-right")
         } else {
           currentColumns[i].classList.add("displaced")
-          setKeyboardButtonColor(guessSplited[i], "D")
-          letrecoRefactor[i] = letrecoRefactor[i].replace(guessSplited[i], "")
+          document.getElementById(guessSplited[i]).classList.add("btn-displaced")
         }
       } else {
         currentColumns[i].classList.add("wrong")
@@ -201,9 +199,6 @@ const checkGuess = () => {
   }
 }
 
-function setKeyboardButtonColor(key, result) {
-  document.getElementById(key).classList.add(result == "R" ? "btn-right" : result == "D" ? "btn-displaced" : "btn-wrong")
-}
 
 const moveToNextRow = () => {
   var typingColumns = document.querySelectorAll(".typing")
@@ -238,7 +233,7 @@ const moveToHiddenRow = () => {
 document.getElementById(`row${0}column${0}`).classList.add("typing-selected")
 const handleKeyboardOnClick = (key) => {
 
-  if (currentColumn === columns) {
+  if (currentColumn === columns){
     return
   }
 
@@ -253,13 +248,30 @@ const handleKeyboardOnClick = (key) => {
   currentTile.textContent = key
 
   guesses[currentRow][currentColumn] = key
-  currentColumn++
 
+  currentColumn <= 4 ? currentColumn++ : currentColumn
 
+  let nextTile = document.querySelector(
+    "#" + idRow + currentRow + "column" + currentColumn
+  )
+
+  while (currentColumn <= 4 && nextTile.textContent != ""){
+    currentColumn++
+    nextTile = document.querySelector(
+      "#" + idRow + currentRow + "column" + currentColumn
+    )
+  }
 
   if (currentColumn <= 4) {
     document.querySelector(".typing-selected").classList.remove("typing-selected")
     document.getElementById(`${idRow}${currentRow}column${currentColumn}`).classList.add("typing-selected")
+  }
+
+  if(guesses[currentRow].join("").length == 5){
+    currentColumn = 5
+    document.querySelector(".typing-selected").classList.remove("typing-selected")
+    document.getElementById(`${idRow}${currentRow}column4`).classList.add("typing-selected")
+    userSelectedColumn = false
   }
 }
 
@@ -520,15 +532,15 @@ if (!indexShowAgainCheckSession) {
     var toast = new bootstrap.Toast(toastLiveExample)
     toast.show()
   }
-}else{
+} else {
   changeToastZIndex()
 }
 
-setTimeout(()=>{
+setTimeout(() => {
   changeToastZIndex()
-},10000)
+}, 10000)
 
-function changeToastZIndex(){
+function changeToastZIndex() {
   document.getElementById('indexToastContainer').style.zIndex = "-100"
 }
 
